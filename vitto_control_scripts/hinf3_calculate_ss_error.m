@@ -1,4 +1,4 @@
-% hinf3_error_calc.m
+% hinf3_calculate_ss_error.m
 % Calculates respective errors
 % Requires finished controller
 
@@ -32,7 +32,7 @@ end
 
 % Calculate dp_error if dp is a sinusoidal input
 if dp_type==2
-%     dp_error = dp_coeff * Kc*dcgain(Sn_star)*Kp;%WRONG
+    %     dp_error = dp_coeff * Kc*dcgain(Sn_star)*Kp;%WRONG
     dp_error=abs(dp_coeff*evalfr(Sn,1i*dp_freq));
 end
 
@@ -52,7 +52,8 @@ if da_type==1
         da_error=0;
     end
     if (da_mu + sys_p) == sys_h
-        da_error=dp_coeff*dcgain(Sn_star); % POSSIBLY WRONG
+        %         da_error=dp_coeff*dcgain(Sn_star); % POSSIBLY WRONG
+        da_error=dcgain(s*da_coeff*Gp_nominal/(1+Ln)); % POSSIBLY WRONG
     end
 end
 
@@ -62,7 +63,7 @@ if ds_type==0
 end
 
 if ds_type==2
-        ds_error=abs(ds_coeff*evalfr(Tn,1i*ds_freq)/(Gs));
-%     ds_error=ds_coeff*Kc*dcgain(Tn)/Gs; %WRONG
+    ds_error=abs(ds_coeff*evalfr(Tn,1i*ds_freq)/(Gs));
+    %     ds_error=ds_coeff*Kc*dcgain(Tn)/Gs; %WRONG
 end
 

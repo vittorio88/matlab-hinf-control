@@ -9,7 +9,7 @@ magnitudeArray = [frequencyVectorLength, arrayLength^nArrayDimensions];
 counter=1;
 
 
-   
+
 if nArrayDimensions == 1
     for iCoeff1=1 : 1 : arrayLength
         mag = bode(tfArray(iCoeff1),frequencyVector);

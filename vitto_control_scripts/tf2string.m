@@ -3,7 +3,7 @@
 
 % example:
 % W1_out=tf2string(W1)
-% 
+%
 %
 % output:
 % W1_out =

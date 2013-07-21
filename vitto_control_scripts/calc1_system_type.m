@@ -13,22 +13,22 @@ sys_p=nGp_poles;
 
 % For reference input
 if dr_type==1
-dr_mu = findminimumcontrollerorder(dr_error_max, dr_h, sys_p);
+    dr_mu = findminimumcontrollerorder(dr_error_max, dr_h, sys_p);
 end
 
 % For Actuator input
 if da_type==1
-da_mu = findminimumcontrollerorder(da_error_max, da_h, sys_p);
+    da_mu = findminimumcontrollerorder(da_error_max, da_h, sys_p);
 end
 
 % For Plant input
 if dp_type==1
-dp_mu = findminimumcontrollerorder(dp_error_max, dp_h, sys_p);
+    dp_mu = findminimumcontrollerorder(dp_error_max, dp_h, sys_p);
 end
 
 % For Sensor input
 if ds_type==1
-ds_mu = findminimumcontrollerorder(ds_error_max, ds_h, sys_p);
+    ds_mu = findminimumcontrollerorder(ds_error_max, ds_h, sys_p);
 end
 
 %% Find minimum amount of poles @ s=0 for Gc

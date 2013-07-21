@@ -1,24 +1,24 @@
 %% Plot Weighting Function Permutations
 figure('name','Weighting Function Permutations');
-semilogx(0,vector_log_slices);
+semilogx(0,length(vectorLog));
 hold on;
 grid on;
 
 
-for cur_i=1: 1 : vector_uncertainty^2
-semilogx( vector_log, Wu_uncertain_mag_array(1:vector_log_slices,cur_i) ,'black' )
+for iPermutation=1: 1 : nPermutations^2
+    semilogx( vectorLog, Wu_uncertain_discrete(1:length(vectorLog),iPermutation) ,'black' )
 end
 hold off;
 
- %% Plot Chosen Weighting Function Discrete
+%% Plot Chosen Weighting Function Discrete
 figure('name','Chosen Weighting Function Discrete');
-semilogx(0,vector_log_slices);
+semilogx(0,length(vectorLog));
 hold on;
 grid on;
 
 
-for cur_i=1: 1 : vector_uncertainty^2
-semilogx( vector_log, Wu_discrete ,'black' )
+for cur_i=1: 1 : nPermutations^2
+    semilogx( vectorLog, Wu_discrete ,'black' )
 end
 
 hold off;
@@ -31,10 +31,10 @@ bode(Wu)
 hold off;
 
 %% Plot Gp_uncertain(i,j)/Gp_nominal - 1  (SLOW!!!)
-%     for i=1 : 1 : vector_uncertainty
-%         for j=1 : 1 : vector_uncertainty
+%     for i=1 : 1 : nPermutations
+%         for j=1 : 1 : nPermutations
 %             hold on
-%             bode( Gp_uncertain(i,j)/Gp_nominal - 1 );    
+%             bode( Gp_uncertain(i,j)/Gp_nominal - 1 );
 %         end
 %     end
 

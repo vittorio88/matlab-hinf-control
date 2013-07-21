@@ -8,7 +8,7 @@ function roundedNumber = roundTo(number,nPlaces)
 
 % check input
 if nargin < 2 || isempty(nPlaces)
-error('please supply two nonempty input arguments')
+    error('please supply two nonempty input arguments')
 end
 
 % make multiplier

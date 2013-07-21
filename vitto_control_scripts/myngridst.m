@@ -1,22 +1,22 @@
-% Versione da fornire agli studenti 
+% Versione da fornire agli studenti
 
 function [] = myngridst(Tpo,Sro)
 
 status = ishold;
 limit=axis;
 if nargin == 1 | nargin == 2
-  %hold off
+    %hold off
 else
-  axis(axis)
-  hold on
-  if limit(3) >= 0,
-    disp('This is not a Nichols Chart. Use ngrid(''new'') for new Nichols Chart grid');
-    hold off
-    return
-  end;
+    axis(axis)
+    hold on
+    if limit(3) >= 0,
+        disp('This is not a Nichols Chart. Use ngrid(''new'') for new Nichols Chart grid');
+        hold off
+        return
+    end;
 end
 if nargin == 1
-   Sro=1e6;
+    Sro=1e6;
 end
 
 % Genera il vettore per l'asse delle ascisse (fase)
@@ -52,8 +52,8 @@ plot(phase1',gain1','-b');
 
 % Impone i limiti per gli assi
 if nargin == 1 | nargin == 2
-	set(gca,'xlim',[-360, 0]);
-	set(gca,'ylim',[-50, 50]);
+    set(gca,'xlim',[-360, 0]);
+    set(gca,'ylim',[-50, 50]);
 end
 
 plot([-180 -180],[-100 100],'b--')

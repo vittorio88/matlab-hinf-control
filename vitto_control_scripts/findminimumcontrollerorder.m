@@ -2,9 +2,9 @@
 % author: vittorio alfieri
 
 % example:
-% minimumControllerOrder = 
+% minimumControllerOrder =
 % findminimumcontrollerorder(toleratedError, inputOrder, nPlantPoles)
-% 
+%
 %
 % output:
 % minimumControllerOrder =
@@ -15,7 +15,7 @@ function minimumControllerOrder = findminimumcontrollerorder(toleratedError, nPo
 if toleratedError == 0
     minimumControllerOrder =  nPolesOfHighestOrderInput + nPolesPlant + 1;
 end
-    
+
 if abs(toleratedError) > 0
     minimumControllerOrder = nPolesOfHighestOrderInput + nPolesPlant;
 end

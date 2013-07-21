@@ -1,5 +1,5 @@
 Model {
-  Name			  "system_model"
+  Name			  "system_model_generalized_inputs"
   Version		  7.4
   MdlSubVersion		  0
   GraphicalInterface {
@@ -28,7 +28,7 @@ Model {
       Name		      "Out2"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.143"
+    ComputedModelVersion    "1.144"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -47,9 +47,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Vittorio"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Feb 27 00:50:05 2013"
-  RTWModifiedTimeStamp	  283827004
-  ModelVersionFormat	  "1.%<AutoIncrement:143>"
+  LastModifiedDate	  "Sun Jul 21 16:59:04 2013"
+  RTWModifiedTimeStamp	  296326739
+  ModelVersionFormat	  "1.%<AutoIncrement:144>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -132,7 +132,7 @@ Model {
 	  $ObjectID		  2
 	  Version		  "1.6.0"
 	  StartTime		  "0.0"
-	  StopTime		  "20"
+	  StopTime		  "50"
 	  AbsTol		  "auto"
 	  FixedStep		  ".1"
 	  InitialStep		  "auto"
@@ -773,7 +773,7 @@ Model {
     }
   }
   System {
-    Name		    "system_model"
+    Name		    "system_model_generalized_inputs"
     Location		    [10, 82, 773, 814]
     Open		    on
     ModelBrowserVisibility  off

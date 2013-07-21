@@ -28,7 +28,7 @@ Model {
       Name		      "Out2"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.143"
+    ComputedModelVersion    "1.148"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -47,9 +47,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Vittorio"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Feb 27 00:50:05 2013"
-  RTWModifiedTimeStamp	  283827004
-  ModelVersionFormat	  "1.%<AutoIncrement:143>"
+  LastModifiedDate	  "Sun Jul 21 22:39:36 2013"
+  RTWModifiedTimeStamp	  296347168
+  ModelVersionFormat	  "1.%<AutoIncrement:148>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -832,8 +832,8 @@ Model {
       BlockType		      Constant
       Name		      "Actuator Disturbance"
       SID		      21
-      Position		      [1143, 250, 1197, 290]
-      BlockRotation	      270
+      Position		      [1145, 250, 1195, 290]
+      BlockRotation	      -1.#IND00
       BlockMirror	      on
       Value		      "da_coeff"
       Port {
