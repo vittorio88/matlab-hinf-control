@@ -2,6 +2,7 @@
 % Simulates error functions and captures values
 % Requires finished controller
 
+% use ode15s solver and 1e-3 precision
 
 %% following must always be initialized to one for simulink
 dr_on=1;

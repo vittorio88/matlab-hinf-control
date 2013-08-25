@@ -52,8 +52,7 @@ if da_type==1
         da_error=0;
     end
     if (da_mu + sys_p) == sys_h
-        %         da_error=dp_coeff*dcgain(Sn_star); % POSSIBLY WRONG
-        da_error=dcgain(s*da_coeff*Gp_nominal/(1+Ln)); % POSSIBLY WRONG
+       da_error= da_coeff*(1+dcgain(Gcmod*s^sys_mu*Ga*Gf*Gs)/dcgain(Gp_nominal*s^sys_p));
     end
 end
 
