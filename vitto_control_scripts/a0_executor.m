@@ -17,7 +17,7 @@ calc3_generate_filters % Calculates filter mask for S and T and generate Ws, Wt,
 hinf1_chose_weighting_functions % Choses weighting functions for hinf controller
 hinf2_generate_controller % Generates hinf controller
 hinf3_calculate_ss_error % Calculates errors using generated controller
-hinf4_simulate_and_extract_errors % Captures error functions from simulink
+% hinf4_simulate_and_extract_errors % Captures error functions from simulink
 
 %% Verification
 xout1_print_mfile

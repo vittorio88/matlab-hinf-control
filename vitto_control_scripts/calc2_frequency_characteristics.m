@@ -4,28 +4,28 @@
 
 %% Calculates overshoot constraints
 
-if overshoot_on==1
+if overshoot.on==1
     % Calculates minimum damping coefficient
-    coeff_damp=(abs(log(overshoot)))/sqrt(pi^2+(log(overshoot))^2);
+    dampingCoefficient=(abs(log(overshoot.maxValue)))/sqrt(pi^2+(log(overshoot.maxValue))^2);
 end
 %% Calculates rise time constraints
 
-if rise_time_on==1
+if riseTime.on==1
     
     % Calculate Wn from rise_time and coeff_damp
-    rise_time_Wn=1/(rise_time*sqrt(1-coeff_damp^2))*(pi-acos(coeff_damp));
+    riseTime.Wn=1/(riseTime.maxValue*sqrt(1-dampingCoefficient^2))*(pi-acos(dampingCoefficient));
     % Calculate Wc from Wn and coeff_damp
-    rise_time_Wc=rise_time_Wn*sqrt( sqrt(1+4*coeff_damp^4) - 2*coeff_damp^2);
+    riseTime.Wc=riseTime.Wn*sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2);
     
 end
 %% Calculates settling time constraints
 
-if settling_time_on==1
+if settlingTime.on==1
     
     %Calculate Wn from settling_time, settling_time_tolerance, and coeff_damp
-    settling_time_Wn=-log(settling_time_tolerance)/(settling_time*coeff_damp);
+    settlingTime.Wn=-log(settlingTime.tolerance)/(settlingTime.maxValue*dampingCoefficient);
     %Calculate Wc from settling_time_Wn and coeff_damp
-    settling_time_Wc=settling_time_Wn*sqrt( sqrt(1+4*coeff_damp^4) - 2*coeff_damp^2);
+    settlingTime.Wc=settlingTime.Wn*sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2);
     
 end
 
@@ -33,22 +33,22 @@ end
 %% Pick values of Wc and Wn
 
 % Pick larger crossover frequency
-Wcmin = rise_time_Wc;
-if settling_time_on==1
-    Wcmin=max(rise_time_Wc, settling_time_Wc);
+Wc.min = riseTime.Wc;
+if settlingTime.on==1
+    Wc.min=max(riseTime.Wc, settlingTime.Wc);
 end
 
 
 
 % Get corresponding Wn from chosen Wc
-if Wcmin==rise_time_Wc
-    Wnmin=rise_time_Wn;
+if Wc.min==riseTime.Wc
+    Wn.min=riseTime.Wn;
 end
 
 % Get corresponding Wn from chosen Wc
-if settling_time_on==1
-    if Wcmin==settling_time_Wc
-        Wnmin=settling_time_Wn;
+if settlingTime.on==1
+    if Wc.min==settlingTime.Wc
+        Wn.min=settlingTime.Wn;
     end
 end
 
@@ -59,9 +59,9 @@ end
 % Wc=Wcmin;
 % Wn=Wnmin;
 
-Wc=700 % Highest point at which Wt has no influence (use 'bode(Wt)' to estimate)
-Wn=Wc/sqrt( sqrt(1+4*coeff_damp^4) - 2*coeff_damp^2)
-Wb=Wn*sqrt(1-2*coeff_damp^2+sqrt(2-4*coeff_damp^2+4*coeff_damp^4))
+Wc.design.value=700 % Highest point at which Wt has no influence (use 'bode(Wt)' to estimate)
+Wn.design.value=Wc.design.value/sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2)
+Wb.design.value=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4))
 
 
 
@@ -69,19 +69,19 @@ Wb=Wn*sqrt(1-2*coeff_damp^2+sqrt(2-4*coeff_damp^2+4*coeff_damp^4))
 
 %% Calculate Sensitivity function, complementary sensitivity function, and
 %% Desired Loop function
-T=1/(1+2*coeff_damp*s/Wn+(s^2)/(Wn^2)); % Complimentary sensitivity function
-S=1-T; % Sensitivity Function
-L=T/(1-T); % Loop function
+T.design.value=1/(1+2*dampingCoefficient*s/Wn.design.value+(s^2)/(Wn.design.value^2)); % Complimentary sensitivity function
+S.design.value=1-T.design.value; % Sensitivity Function
+L.design.value=T.design.value/(1-T.design.value); % Loop function
 
 
 %% Calculate bandwidth of sensitivity function
-S_bandwidth=Wn*sqrt(1-2*coeff_damp^2+sqrt(2-4*coeff_damp^2+4*coeff_damp^4));
-S_star=S/s^(sys_h);
-S_star=minreal(S_star);
+S.design.bandwidth=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4));
+S.design.star=S.design.value/s^(sys.h);
+S.design.star=minreal(S.design.star);
 
 %% Calculates sensitivity and complementary sensitivity function peaks
-Tp=1/(2*coeff_damp*sqrt(1-coeff_damp^2));
-Sp=2*coeff_damp*sqrt(2+4*coeff_damp^2+2*sqrt(1+8*coeff_damp^2))/(sqrt(1+8*coeff_damp^2)+4*coeff_damp^2-1);
+T.design.p.value=1/(2*dampingCoefficient*sqrt(1-dampingCoefficient^2));
+S.design.p.value=2*dampingCoefficient*sqrt(2+4*dampingCoefficient^2+2*sqrt(1+8*dampingCoefficient^2))/(sqrt(1+8*dampingCoefficient^2)+4*dampingCoefficient^2-1);
 
-Tp_db=20*log10(Tp);
-Sp_db=20*log10(Sp);
+T.design.p.db=20*log10(T.design.p.value);
+S.design.p.db=20*log10(S.design.p.value);

@@ -9,14 +9,14 @@ disp('Check error values')
 disp('########')
 
 % Error tolerances
-dr_error_max % Max output error due to reference input
-dr_error % output error due to reference input
-da_error_max % Max output error in presence of da
-da_error % output error in presence of da
-dp_error_max % Max output error in presence of dp
-dp_error % output error in presence of dp
-ds_error_max % Max output error in presence of ds
-ds_error % output error in presence of ds
+r.maxError % Max output error due to reference input
+r.actualError % output error due to reference input
+da.maxError % Max output error in presence of da
+da.actualError % output error in presence of da
+dp.maxError % Max output error in presence of dp
+dp.actualError % output error in presence of dp
+ds.maxError % Max output error in presence of ds
+ds.actualError % output error in presence of ds
 
 
 %% Calculation of system steady-state gain.
@@ -39,7 +39,7 @@ disp('########')
 disp('Calculation of steady-state reference output error')
 disp('########')
 
-disp( ['Given that maxmimum error from input reference signal of order = ',num2str(dr_h), ', and maximum error= ',num2str(dr_error_max),' the minimum controller order can be calculated. '   ])
+disp( ['Given that maxmimum error from input reference signal of order = ',num2str(r.order), ', and maximum error= ',num2str(r.maxError),' the minimum controller order can be calculated. '   ])
 disp( 'Extracting the error signal from a block diagram permits us to find the the transfer function Gre to which we can then apply the final value theorem.')
 disp( 'INSERT GRE BLOCK DIAGRAM' )
 disp( 'ALG: Assuming mu + p >= h')
@@ -57,20 +57,20 @@ disp( 'ALG: |erinf| = lim(s->0) s*s^(mu+p)/s^(h+1) * |S*(0) * Kd * Ro| ')
 disp( 'ALG: Simplyifying s')
 disp( 'ALG: |erinf| = lim(s->0) s^(mu+p)/s^(h) * |S*(0) * Kd * Ro| ')
 disp( 'From the preceding equation, it is evident that for the limit to exist h must be greater than or equal to ')
-if dr_error_max == 0
+if r.maxError == 0
     disp( 'For a null error mu + p must be greater than h')
-    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(dr_h),' to satisfy the null error specification a mu of',num2str(dr_mu), 'is required'])
+    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(r.order),' to satisfy the null error specification a mu of',num2str(dr_mu), 'is required'])
     
 end
-if dr_error_max ~= 0
+if r.maxError ~= 0
     disp( 'For a non-null error mu + p can be equal to h')
-    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(dr_h),' to satisfy the non-null error specification a mu of',num2str(dr_mu), 'is required'])
+    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(r.order),' to satisfy the non-null error specification a mu of',num2str(dr_mu), 'is required'])
     if dr_mu == sys_mu
         disp( 'Because mu + p = h, and we know the max error, we can calculate the maximum of S*(0)')
         disp( 'ALG: |erinf| = lim(s->0) |S*(0) * Kd * Ro| ')
-        disp([ 'Evaluating with the max error ro=',num2str(dr_error_max),' and the the steady-state gain Kd=',num2str(Kd),', and the input coefficient Ro=',num2str(dr_coeff)])
+        disp([ 'Evaluating with the max error ro=',num2str(r.maxError),' and the the steady-state gain Kd=',num2str(Kd),', and the input coefficient Ro=',num2str(r.coefficient)])
         disp('Solving for S*(0).... S*(0)<= (ro)/(Kd*Ro) ')
-        disp([ 'ALG: S*(0)<=  ',num2str(dr_error_max/Kd/dr_coeff)])
+        disp([ 'ALG: S*(0)<=  ',num2str(r.maxError/Kd/r.coefficient)])
     end
 end
 
@@ -78,12 +78,12 @@ end
 
 %% Calculation of steady-state plant disturbance output error
 
-if dp_type == 1
+if dp.type == 1
 disp('########')
 disp('Calculation of steady-state plant disturbance output error')
 disp('########')
 
-disp( ['Given that maxmimum error from input plant disturbance signal of order = ',num2str(dp_h), ', and maximum error= ',num2str(dp_error_max),' the minimum controller order can be calculated. '   ])
+disp( ['Given that maxmimum error from input plant disturbance signal of order = ',num2str(dp.order), ', and maximum error= ',num2str(dp.maxError),' the minimum controller order can be calculated. '   ])
 disp( 'Extracting the error signal from a block diagram permits us to find the the transfer function Gpe to which we can then apply the final value theorem.')
 disp( 'INSERT GDP BLOCK DIAGRAM' )
 disp( 'ALG: Assuming mu + p >= h')
@@ -105,32 +105,32 @@ disp( 'ALG: |erinf| = lim(s->0) s*s^(mu+p)/s^(h+1) * |S*(0)| * Dp0  ')
 disp( 'ALG: Simplyifying s')
 disp( 'ALG: |erinf| = lim(s->0) s^(mu+p)/s^(h) * |S*(0)| * Dp0 ')
 disp( 'From the preceding equation, it is evident that for the limit to exist h must be greater than or equal to ')
-if dp_error_max == 0
+if dp.maxError == 0
     disp( 'For a null error mu + p must be greater than h')
-    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(dp_h),' to satisfy the null error specification a mu of',num2str(dp_mu), 'is required'])
+    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(dp.order),' to satisfy the null error specification a mu of',num2str(dp_mu), 'is required'])
     
 end
-if dp_error_max ~= 0
+if dp.maxError ~= 0
     disp( 'For a non-null error mu + p can be equal to h')
-    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(dp_h),' to satisfy the non-null error specification a mu of',num2str(dp_mu), 'is required'])
+    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(dp.order),' to satisfy the non-null error specification a mu of',num2str(dp_mu), 'is required'])
     if da_mu == sys_mu
         disp( 'Because mu + p = h, and we know the max error, we can calculate a maximum of S*(0)')
         disp( 'ALG: |edpinf| = lim(s->0) |(S*(0))| * Dp0 ')
-        disp([ 'Evaluating with the max error rodp=',num2str(dp_error_max),' and the input coefficient Dp0=',num2str(dp_coeff)])
+        disp([ 'Evaluating with the max error rodp=',num2str(dp.maxError),' and the input coefficient Dp0=',num2str(dp.coefficient)])
         disp('Solving for S*(0).... S*(0)<= (rodp)/(Dp0) ')
-        disp([ 'ALG: S*(0)<=  ',num2str(dp_error_max/dp_coeff)])
+        disp([ 'ALG: S*(0)<=  ',num2str(dp.maxError/dp.coefficient)])
     end
 end
 
 
 end
 
-if dp_type == 2
+if dp.type == 2
 disp('########')
 disp('Calculation of steady-state plant disturbance output error')
 disp('########')
 
-disp( ['Given that maxmimum error from plant disturbance with frequency = ',num2str(dp_freq), ', and maximum error= ',num2str(dp_error_max),' a constraint on the frequency domain can be calculated. '])
+disp( ['Given that maxmimum error from plant disturbance with frequency = ',num2str(dp.frequency), ', and maximum error= ',num2str(dp.maxError),' a constraint on the frequency domain can be calculated. '])
 disp( 'Extracting the error signal from a block diagram permits us to find the the transfer function Gpe which we can use to estimate filter mask values')
 disp( 'INSERT GDP BLOCK DIAGRAM' )
 disp( 'ALG: Our error signal as a function of time is: dp(t)= ap*sin(wp*t)')
@@ -144,7 +144,7 @@ disp( 'ALG: |edpinf| = =|a|S(jwp)|*sin(jwp*t)|<=rop')
 disp( 'ALG: Rearranging')
 disp( 'ALG: S(jw) <= rop/ap = Ms_lf')
 disp( 'ALG: We have calculated un upper bound of S at a disturbance frequency')
-disp([ 'ALG: Evaluating Ms_lf with rop=',num2str(dr_error_max),' and input coefficient ap=',num2str(dp_coeff),' we get Ms_lf=',num2str(Ms_lf),' = ',num2str(Ms_lf_db),'db'])
+disp([ 'ALG: Evaluating Ms_lf with rop=',num2str(r.maxError),' and input coefficient ap=',num2str(dp.coefficient),' we get Ms_lf=',num2str(Ms_lf),' = ',num2str(Ms_lf_db),'db'])
     
 end
 
@@ -152,12 +152,12 @@ end
 
 %% Calculation of steady-state actuator disturbance output error
 
-if da_type == 1
+if da.type == 1
 disp('########')
 disp('Calculation of steady-state actuator disturbance output error')
 disp('########')
 
-disp( ['Given that maxmimum error from input actuator disturbance signal of order = ',num2str(da_h), ', and maximum error= ',num2str(da_error_max),' the minimum controller order can be calculated. '   ])
+disp( ['Given that maxmimum error from input actuator disturbance signal of order = ',num2str(da.order), ', and maximum error= ',num2str(da.maxError),' the minimum controller order can be calculated. '   ])
 disp( 'Extracting the error signal from a block diagram permits us to find the the transfer function Gpe to which we can then apply the final value theorem.')
 disp( 'INSERT GDP BLOCK DIAGRAM' )
 disp( 'ALG: Assuming mu + p >= h')
@@ -171,14 +171,14 @@ disp( 'ALG: |edainf| = lim(s->0) s*|yda(s)|')
 disp( 'ALG: Substituting eda(s)=yda(s)=aa*(1+Gc*Ga*Gf*Gs)/Gpn where Gpn and Gc have poles in s=0 removed')
 disp( 'ALG: |edainf| = lim(s->0) s^(mu+p)/s^h*|aa*(1+Gc*Ga*Gf*Gs)/Gpn |')
 disp( 'From the preceding equation, it is evident that for the limit to exist h must be greater than or equal to ')
-if da_error_max == 0
+if da.maxError == 0
     disp( 'For a null error mu + p must be greater than h')
-    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(da_h),' to satisfy the null error specification a mu of',num2str(da_mu), 'is required'])
+    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(da.order),' to satisfy the null error specification a mu of',num2str(da_mu), 'is required'])
     
 end
-if da_error_max ~= 0
+if da.maxError ~= 0
     disp( 'For a non-null error mu + p can be equal to h')
-    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(da_h),' to satisfy the non-null error specification a mu of',num2str(da_mu), 'is required'])
+    disp([ 'Because p=',num2str(sys_p),' and the input order is',num2str(da.order),' to satisfy the non-null error specification a mu of',num2str(da_mu), 'is required'])
     if da_mu == sys_mu
         disp( 'Because mu + p = h, and we know the max error, we can calculate a maximum of S*(0)')
         disp( 'ALG: |edainf| = lim(s->0) s^(mu+p)/s^h*|aa*(1+Gc*Ga*Gf*Gs)/Gpn |')
@@ -188,12 +188,12 @@ end
 end
 
 %% Calculation of steady-state sensor disturbance output error
-if ds_type == 2
+if ds.type == 2
 disp('########')
 disp('Calculation of steady-state sensor disturbance output error')
 disp('########')
 
-disp( ['Given that maxmimum error from sensor disturbance with frequency = ',num2str(ds_freq), ', and maximum error= ',num2str(ds_error_max),' a constraint on the frequency domain can be calculated. '])
+disp( ['Given that maxmimum error from sensor disturbance with frequency = ',num2str(ds.frequency), ', and maximum error= ',num2str(ds.maxError),' a constraint on the frequency domain can be calculated. '])
 disp( 'Extracting the error signal from a block diagram permits us to find the the transfer function Gpe which we can use to estimate filter mask values')
 disp( 'INSERT GDS BLOCK DIAGRAM' )
 disp( 'ALG: Our error signal as a function of time is: ds(t)= as*sin(ws*t)')
@@ -207,7 +207,7 @@ disp( 'ALG: |edpinf| = =|as|T(jws)|*sin(jws*t)|<=ros*Gs')
 disp( 'ALG: Rearranging')
 disp( 'ALG: T(jw) <= ros*Gs/as = Mt_hf')
 disp( 'ALG: We have calculated un upper bound of T at a disturbance frequency')
-disp([ 'ALG: Evaluating Mt_hf with ros=',num2str(ds_error_max),' and input coefficient as=',num2str(ds_coeff),'and sensor gain Gs=',num2str(Gs),' we get Mt_hf=',num2str(Mt_hf),' = ',num2str(Mt_hf_db),'db'])
+disp([ 'ALG: Evaluating Mt_hf with ros=',num2str(ds.maxError),' and input coefficient as=',num2str(ds.coefficient),'and sensor gain Gs=',num2str(Gs),' we get Mt_hf=',num2str(Mt_hf),' = ',num2str(Mt_hf_db),'db'])
     
 end
 

@@ -9,20 +9,20 @@
 
 
 % For polynomial or null plant disturbance
-if dp_type == 0 || dp_type == 1
-    W1=Ws;
-    W1mod=W1 * s^sys_h/(s+.01)^sys_h; % Replace origin poles with poles close to origin
-    W1mod=minreal(W1mod);
+if dp.type == 0 || dp.type == 1
+    W1.tf.value=Ws.tf.value;
+    W1.mod.value=W1.tf.value * s^sys.h/(s+.01)^sys.h; % Replace origin poles with poles close to origin
+    W1.mod.value=minreal(W1.mod.value);
 end
 
 % For sinusoidal plant disturbance
-if dp_type==2
-    W1=Ws;
-    W1mod=W1;
+if dp.type==2
+    W1.tf.value=Ws.tf.value;
+    W1.mod.value=W1.tf.value;
 end
 
-[W1_num,W1_den]=tfdata(W1,'v');
-[W1mod_num,W1mod_den]=tfdata(W1mod,'v');
+[W1.tf.num,W1.tf.den]=tfdata(W1.tf.value,'v');
+[W1.mod.num,W1.mod.den]=tfdata(W1.mod.value,'v');
 
 
 %% GET W2 - AUTO (FAIL)
@@ -40,8 +40,8 @@ end
 %% GET W2 - Manual procedure
 % % convienent when there is a clear higher curve
 % % If you pick Wt, We use Tp instead of Wt to remove unstable zeros
-W2=Wt; % Doesn't work due to unstable zeros
-W2mod=tf(1/Tp); % Same as Wt without zeros
+W2.tf.value=Wt.tf.value; % Doesn't work due to unstable zeros
+W2.mod.value=tf(1/T.design.p.value); % Same as Wt without zeros
 
 % % If you pick Wu
 % W2=Wu; % pick highest value of Wu
@@ -51,6 +51,6 @@ W2mod=tf(1/Tp); % Same as Wt without zeros
 
 
 %% Get tf numerator and denominator
-[ W2_num W2_den]=tfdata(W2, 'v');
-[ W2mod_num W2mod_den]=tfdata(W2mod, 'v');
+[ W2.tf.num W2.tf.den]=tfdata(W2.tf.value, 'v');
+[ W2.mod.num W2.mod.den]=tfdata(W2.mod.value, 'v');
 

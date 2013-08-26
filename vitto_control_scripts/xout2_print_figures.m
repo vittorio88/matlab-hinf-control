@@ -1,24 +1,24 @@
 %% Plot Weighting Function Permutations
 figure('name','Weighting Function Permutations');
-semilogx(0,length(vectorLog));
+semilogx(0,length(vector.log.value));
 hold on;
 grid on;
 
 
 for iPermutation=1: 1 : nPermutations^2
-    semilogx( vectorLog, Wu_uncertain_discrete(1:length(vectorLog),iPermutation) ,'black' )
+    semilogx( vector.log.value, Wu.uncertain.discreteArray(1:length(vector.log.value),iPermutation) ,'black' )
 end
 hold off;
 
 %% Plot Chosen Weighting Function Discrete
 figure('name','Chosen Weighting Function Discrete');
-semilogx(0,length(vectorLog));
+semilogx(0,length(vector.log.value));
 hold on;
 grid on;
 
 
 for cur_i=1: 1 : nPermutations^2
-    semilogx( vectorLog, Wu_discrete ,'black' )
+    semilogx( vector.log.value, Wu.tf.discrete,'black' )
 end
 
 hold off;
@@ -27,7 +27,7 @@ hold off;
 figure('name','Weighting Function');
 hold on;
 grid on;
-bode(Wu)
+bode(Wu.tf.value)
 hold off;
 
 %% Plot Gp_uncertain(i,j)/Gp_nominal - 1  (SLOW!!!)
@@ -42,7 +42,7 @@ hold off;
 figure('name','Loop function and sensitivity functions');
 hold on;
 grid on;
-bode(L,S,T)
+bode(L.design.value,S.design.value,T.design.value)
 legend('Loop Function','Sensitivity Function','Complimentary Sensitivity Function')
 hold off;
 
@@ -50,31 +50,31 @@ hold off;
 figure('name','Nominal Loop function and sensitivity functions');
 hold on;
 grid on;
-bode(Ln,Sn,Tn)
+bode(L.nominal.value,S.nominal.value,T.nominal.value)
 legend('Nominal Loop Function','Nominal Sensitivity Function','Nominal Complimentary Sensitivity Function')
 hold off;
 
 %% Plot nichols with Sp and Tp
 % ngrid('new')
 figure('name','Nichols of loop function');
-myngridst(Tp,Sp)
+myngridst(T.design.p.value,S.design.p.value)
 legend('Tp','Sp')
 hold on
-nichols(L,'r')
+nichols(L.design.value,'r')
 hold off;
 
 %% Plot nominal nichols of Ln with Sp and Tp
 % ngrid('new')
 figure('name','Nichols of nominal loop function');
-myngridst(Tp,Sp)
+myngridst(T.design.p.value,S.design.p.value)
 hold on
-nichols(Ln,'r')
+nichols(L.nominal.value,'r')
 legend('Tp','Sp','Ln')
 hold off;
 
 %% check for nominal performance
 figure('name','Check NP, should not pass 0db');
-bode(Ws*Sn,Wt*Tn) % both curves should not pass 0db
+bode(Ws.tf.value*S.nominal.value,Wt.tf.value*T.nominal.value) % both curves should not pass 0db
 legend('Ws*Sn','Wt*Tn')
 
 
@@ -83,18 +83,18 @@ legend('Ws*Sn','Wt*Tn')
 % blue should be under green for hf
 
 figure('name','Check RP, blue over red for lf, blue under green for hf ');
-bode(Ws/(1-Wu),'r',L,'b',(1-Ws)/Wu,'g')
+bode(Ws.tf.value/(1-Wu.tf.value),'r',L.design.value,'b',(1-Ws.tf.value)/Wu.tf.value,'g')
 legend('Ws/(1-Wu)','L','(1-Ws)/Wu')
 
 
 %% Check for robust stability
 figure('name','Check RS, should not pass 0db');
-bode(Wu*Tn) % should not pass 0db
+bode(Wu.tf.value*T.nominal.value) % should not pass 0db
 legend('Wu*Tn')
 
 %% Check for nominal performance and robust stability
 figure('name','Check NP and RS, should not pass 0db');
-bode(Ws*Sn+Wu*Tn) % should not pass 0db
+bode(Ws.tf.value*S.nominal.value+Wu.tf.value*T.nominal.value) % should not pass 0db
 legend('Ws*Sn + Wu*Tn')
 
 %% Plot Error function Er

@@ -5,35 +5,35 @@
 
 
 %% Find steady state error due to polynomial reference input
-if (dr_mu + sys_p) < sys_h
-    dr_error=0;
+if (r.mu + sys.p) < sys.h
+    r.actualError=0;
 end
 
-if (dr_mu + sys_p) == sys_h
-    dr_error=dcgain(Sn_star) * Kd * dr_coeff;
+if (r.mu + sys.p) == sys.h
+    r.actualError=dcgain(S.nominal.star) * Kd * r.coefficient;
 end
 
 %% Find steady state error due to disturbance dp
 
 % If there is no plant disturbance error is null.
-if dp_type==0
-    dp_error=0;
+if dp.type==0
+    dp.actualError=0;
 end
 
 % Calculate dp_error if dp is a polynomial input
-if dp_type==1
-    if   (dp_mu + sys_p) < sys_h
-        dp_error = 0;
+if dp.type==1
+    if   (dp.mu + sys.p) < sys.h
+        dp.actualError = 0;
     end
-    if (dp_mu + sys_p) == sys_h
-        dp_error = dp_coeff * Kc*dcgain(Sn_star)*Kp; % POSSIBLY WRONG
+    if (dp.mu + sys.p) == sys.h
+        dp.actualError = dp.coefficient * Kc*dcgain(S.nominal.star)*Kp; % POSSIBLY WRONG
     end
 end
 
 % Calculate dp_error if dp is a sinusoidal input
-if dp_type==2
+if dp.type==2
     %     dp_error = dp_coeff * Kc*dcgain(Sn_star)*Kp;%WRONG
-    dp_error=abs(dp_coeff*evalfr(Sn,1i*dp_freq));
+    dp.actualError=abs(dp.coefficient*evalfr(S.nominal.star,1i*dp.frequency));
 end
 
 
@@ -41,28 +41,28 @@ end
 %% Find steady state error due to disturbance da
 
 % If da is null, da error is null
-if da_type==0
-    da_error=0;
+if da.type==0
+    da.actualError=0;
 end
 
 
 % Calculate da_error if da is a polynomial input
-if da_type==1
-    if   (da_mu + sys_p) < sys_h
-        da_error=0;
+if da.type==1
+    if   (da.mu + sys.p) < sys.h
+        da.actualError=0;
     end
-    if (da_mu + sys_p) == sys_h
-       da_error= da_coeff*(1+dcgain(Gcmod*s^sys_mu*Ga*Gf*Gs)/dcgain(Gp_nominal*s^sys_p));
+    if (da.mu + sys.p) == sys.h
+       da.actualError= da.coefficient*(1+dcgain(Gc.mod.value*s^sys.mu*Ga*Gf*Gs)/dcgain(Gp.nominal.tf*s^sys.p));
     end
 end
 
 %% Find steady state error due to sinusoidal disturbance ds
-if ds_type==0
-    ds_error=0;
+if ds.type==0
+    ds.actualError=0;
 end
 
-if ds_type==2
-    ds_error=abs(ds_coeff*evalfr(Tn,1i*ds_freq)/(Gs));
+if ds.type==2
+    ds.actualError=abs(ds.coefficient*evalfr(T.nominal.value,1i*ds.frequency)/(Gs));
     %     ds_error=ds_coeff*Kc*dcgain(Tn)/Gs; %WRONG
 end
 

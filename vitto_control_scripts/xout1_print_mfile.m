@@ -1,14 +1,14 @@
 % ver_output.m
 % output everything formatted as matlab script
 
-Wt_out=tf2string(Wt)
-Wu_out=tf2string(Wu)
-Ws_out=tf2string(Ws)
+Wt.out=tf2string(Wt.tf.value);
+Wu.out=tf2string(Wu.tf.value);
+Ws.out=tf2string(Ws.tf.value);
 
-W1_out=tf2string(W1)
-W1mod_out=tf2string(W1mod)
-W2_out=tf2string(W2)
-W2mod_out=tf2string(W2mod)
+W1.tf.out=tf2string(W1.tf.value);
+W1.mod.out=tf2string(W1.mod.value);
+W2.tf.out=tf2string(W2.tf.value);
+W2.mod.out=tf2string(W2.mod.value);
 
-Gc_out=tf2string(Gc)
-Gcmod_out=tf2string(Gcmod)
+Gc.out=tf2string(Gc.tf.value);
+Gc.mod.out=tf2string(Gc.mod.value);
