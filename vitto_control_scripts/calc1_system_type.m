@@ -11,24 +11,26 @@ ds.mu = 0;
 
 sys.p=Gp.nOriginPoles;
 
-% For reference input
+% For reference input 
+% Function prototype is as follows
+% findminimumcontrollerorder(inputSignal, inputTf, cltfNoController)
 if r.type==1
-    r.mu = findminimumcontrollerorder(r.maxError, r.order, sys.p);
+    [r.mu r.calculatedError] = findminimumcontrollerorder(r.signal, r.tf, r.maxError, r.errorSignalNoGc);
 end
 
 % For Actuator input
 if da.type==1
-    da.mu = findminimumcontrollerorder(da.maxError, da.order, sys.p);
+[da.mu da.calculatedError] = findminimumcontrollerorder(da.signal, da.tf, da.maxError, da.errorSignalNoGc); 
 end
 
 % For Plant input
 if dp.type==1
-    dp.mu = findminimumcontrollerorder(dp.maxError, dp.order, sys.p);
+[dp.mu dp.calculatedError] = findminimumcontrollerorder(dp.signal, dp.tf, dp.maxError, dp.errorSignalNoGc);
 end
 
 % For Sensor input
 if ds.type==1
-    ds.mu = findminimumcontrollerorder(ds.maxError, ds.order, sys.p);
+[ds.mu ds.calculatedError] = findminimumcontrollerorder(ds.signal, ds.tf, ds.maxError, ds.errorSignalNoGc);
 end
 
 %% Find minimum amount of poles @ s=0 for Gc
@@ -55,8 +57,5 @@ end
 %% Define system order and input signal
 
 sys.h=sys.mu+sys.p;
-
-% reference input
-r_othersignal=r.coefficient*(1/s^(r.order));
 
 

@@ -1,4 +1,5 @@
 %%% DATA INPUT
+
 %% Controller values
 Gs=1; % Sensor Gain
 Ga=3; % Actuator
@@ -19,7 +20,7 @@ Kd=2; % Proportion between input and output
 r= struct('coefficient', 1 ...
         , 'maxError', 1.5*10^(-1) ...
         , 'actualError', -1000 ...
-        , 'type', 0 ...
+        , 'type', 1 ...
         , 'frequency', 0 ...
         , 'order', 0 ...
         , 'tf', Gr ...
@@ -54,14 +55,6 @@ ds= struct('coefficient', 1*10^(-3) ...
         );
 
 %% Time-Domain Performance Specifications
-% rise_time_on=1;
-% overshoot_on=1;
-% settling_time_on=0;
-% 
-% rise_time=5e-3; % Max Rise time in seconds tr
-% overshoot=0.08; % Max overshoot from a step response (s^)
-% settling_time=12; % Max time with which an input must be settled
-% settling_time_tolerance=0.05; % DECIMAL Tolerance defining distance of value from Yss at which a function is considered settled. ( alpha)
 
 riseTime.on=1;
 riseTime.maxValue=5e-3;
@@ -74,27 +67,6 @@ settlingTime.maxValue=12;
 settlingTime.tolerance=0.05;
 
 %% Plant Values
-
-% % Number of uncertain coefficients
-% nGp_coeffs=2;
-
-% % Coefficient 1 range (set to 0 if it doesn't exist)
-% Gp_coeff1_low=0.8;
-% Gp_coeff1_high=1.2;
-% 
-% % Coefficient 2 range (set to 0 if it doesn't exist)
-% Gp_coeff2_low=420;
-% Gp_coeff2_high=580;
-% 
-% % Coefficient 3 range (set to 0 if it doesn't exist)
-% Gp_coeff3_low=0;
-% Gp_coeff3_high=0;
-
-% % Plant transfer function string for further processing
-% Gp_string='(10e6*Gp_coeff1)/((s^2 + Gp_coeff2*s))';
-% 
-% % Gp poles at s=0
-% nGp_poles=1;
 
 Gp.nCoefficients=2;
 Gp.nOriginPoles=1;

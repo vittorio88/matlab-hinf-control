@@ -32,7 +32,6 @@ end
 
 % Calculate dp_error if dp is a sinusoidal input
 if dp.type==2
-    %     dp_error = dp_coeff * Kc*dcgain(Sn_star)*Kp;%WRONG
     dp.actualError=abs(dp.coefficient*evalfr(S.nominal.star,1i*dp.frequency));
 end
 

@@ -33,3 +33,17 @@ r.signal=buildsignalinputfunction( r.coefficient, r.type, r.frequency, r.order, 
 dp.signal=buildsignalinputfunction( dp.coefficient, dp.type, dp.frequency, dp.order, vector.log.value );
 da.signal=buildsignalinputfunction( da.coefficient, da.type, da.frequency, da.order, vector.log.value);
 ds.signal=buildsignalinputfunction( ds.coefficient, ds.type, ds.frequency, ds.order, vector.log.value);
+
+
+%%% PICK UP HERE CHECK MEEEE
+r.cltfNoGc=Ga*Gp.nominal.tf / (1-Gf*Gs*Ga*Gp.nominal.tf);
+r.errorSignalNoGc =(1/r.cltfNoGc);
+
+da.cltfNoGc=Gp.nominal.tf / (1-Gf*Gs*Ga*Gp.nominal.tf);
+da.errorSignalNoGc =(1/r.cltfNoGc);
+
+dp.cltfNoGc=1 / (1-Gf*Gs*Ga*Gp.nominal.tf);
+dp.errorSignalNoGc =(1/r.cltfNoGc);
+
+ds.cltfNoGc=  Gf*Ga*Gp.nominal.tf /(1-Ga*Gf*Gs*Gp.nominal.tf) ;
+ds.errorSignalNoGc =(1/r.cltfNoGc);
