@@ -6,17 +6,21 @@
 % frequency, and under Sp at all times.
 
 
-% Calculate Ms_lf based on dp_error_max, and dp_coeff
-Ms_lf.value=dp.maxError/dp.coefficient;
-Ms_lf.db=20*log10(Ms_lf.value);
 
 % Calculate pole position and generate filters for nonsinusoidal
 % disturbances
 if dp.type == 0 || dp.type == 1
     
-    Ws.tf.polepos=Wc.design*10^(-1); % Move as close to Wc as possible without cutting Sp in result
-    Ws.tf.inv=S.design.p.value*s^sys_h/(s+Ws.tf.polepos);
+    if sys.h ~= 1
+        % OLD, WORKS, but slow
+        Ws.tf.polepos=Wc.design.value*10^(-1); % Move as close to Wc as possible without cutting Sp in result
+        Ws.tf.inv=S.design.p.value*s^sys.h/(s+Ws.tf.polepos)^sys.h;
+    end
     
+    % only applicable for h = 1 
+    if sys.h ==1
+        Ws.tf.inv=S.design.value;
+    end
     % Verify Ws_polepos with following command
     %      bode(tf(Sp),S,Ws_inv,tf(s))
 end
@@ -59,6 +63,17 @@ end
 
 % Build Ws manually butterworth 2nd order
 if dp.type == 2
+    
+    
+    
+    % Calculate Ms_lf based on dp_error_max, and dp_coeff
+    if strcmp(class(dp.tf),'double')
+        Ms_lf.value=dp.maxError/dp.coefficient;
+    end
+    if strcmp(class(dp.tf),'tf')
+        Ms_lf.value=dp.maxError/dp.coefficient- evalfr(dp.tf,1i*dp.frequency) ;
+    end
+    Ms_lf.db=20*log10(Ms_lf.value) ;
     % Verify Ws_polepos with following command
     % bode(tf(Sp),S,Ws_inv)
     %     Ws.tf.zeropos = dp.frequency;
@@ -72,7 +87,7 @@ if dp.type == 2
     
     Ws.tf.inv=buildhighpassbwfilterfrommask(Ms_lf.db, dp.frequency, S.design.p.value, vector.log.value);
     Ws.tf.value=Ws.tf.inv^-1;
- 
+    
     % VERIFY
     % bode(tf(Sp),Ws_inv,tf(Ms_lf))
     
@@ -97,7 +112,12 @@ if ds.type == 0 || ds.type == 1
 end
 
 if ds.type==2
-    Mt_hf.value=ds.maxError*Gs/ds.coefficient;
+    if strcmp(class(dp.tf),'double')
+        Mt_hf.value=ds.maxError*Gs/ds.coefficient;
+    end
+    if strcmp(class(dp.tf),'tf')
+        Mt_hf.value=ds.maxError*Gs/ds.coefficient - evalfr(ds.tf,1i*ds.frequency) ;
+    end
     Mt_hf.db=20*log10(Mt_hf.value);
     
     % For butterworth
@@ -128,20 +148,20 @@ Wt.poles=minreal(Wt.tf.value*T.design.p.value); % Pole position equal Wt with dc
 % Choose function to call based on amount of uncertain variables.
 if Gp.nCoefficients == 1
     Gp.uncertainArray = permutatetfstringonedof   (Gp.inputString, ...
-        'coeff1', Gp.coeffecient(1).low, Gp.coeffecient(1).high, nPermutations);
+        'coeff1', Gp.coefficient(1).low, Gp.coefficient(1).high, nPermutations);
 end
 
 if Gp.nCoefficients == 2
     Gp.uncertainArray = permutatetfstringtwodof  (Gp.inputString, ...
-        'coeff1', Gp.coeffecient(1).low, Gp.coeffecient(1).high, ...
-        'coeff2', Gp.coeffecient(2).low, Gp.coeffecient(2).high, nPermutations);
+        'coeff1', Gp.coefficient(1).low, Gp.coefficient(1).high, ...
+        'coeff2', Gp.coefficient(2).low, Gp.coefficient(2).high, nPermutations);
 end
 
 if Gp.nCoefficients == 3
     Gp.uncertainArray = permutatetfstringthreedof(Gp.inputString, ...
-        'coeff1', Gp.coeffecient(1).low, Gp.coeffecient(1).high, ...
-        'coeff2', Gp.coeffecient(2).low, Gp.coeffecient(2).high, ...
-        'coeff3', Gp.coeffecient(3).low, Gp.coeffecient(3).high, nPermutations);
+        'coeff1', Gp.coefficient(1).low, Gp.coefficient(1).high, ...
+        'coeff2', Gp.coefficient(2).low, Gp.coefficient(2).high, ...
+        'coeff3', Gp.coefficient(3).low, Gp.coefficient(3).high, nPermutations);
 end
 
 % Generate Uncertain weighting function array and discretize

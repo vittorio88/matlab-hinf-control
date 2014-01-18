@@ -20,6 +20,6 @@ hinf3_calculate_ss_error % Calculates errors using generated controller
 % hinf4_simulate_and_extract_errors % Captures error functions from simulink
 
 %% Verification
-xout1_print_mfile
-xout2_print_figures
-xout3_print_report
+% xout1_print_mfile
+% xout2_print_figures
+% xout3_print_report

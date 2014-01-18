@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.138"
+    ComputedModelVersion    "1.137"
     NumModelReferences	    4
     ModelReference {
       ModelRefBlockPath	      "system_model_user_friendly/actuator disturbance signal|input_signal"
@@ -37,9 +37,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Vittorio"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Sep 04 12:21:01 2013"
+  LastModifiedDate	  "Wed Sep 04 12:16:12 2013"
   RTWModifiedTimeStamp	  300197771
-  ModelVersionFormat	  "1.%<AutoIncrement:138>"
+  ModelVersionFormat	  "1.%<AutoIncrement:137>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off

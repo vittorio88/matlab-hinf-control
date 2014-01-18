@@ -60,8 +60,10 @@ end
 % Wn=Wnmin;
 
 Wc.design.value=700 % Highest point at which Wt has no influence (use 'bode(Wt)' to estimate)
-Wn.design.value=Wc.design.value/sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2)
-Wb.design.value=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4))
+% REMEMBER TO VIEW crossover frequency bode(L.nominal.value)
+
+Wn.design.value=Wc.design.value/sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2);
+Wb.design.value=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4));
 
 
 
@@ -74,10 +76,11 @@ S.design.value=1-T.design.value; % Sensitivity Function
 L.design.value=T.design.value/(1-T.design.value); % Loop function
 
 
-%% Calculate bandwidth of sensitivity function
+%% Calculate bandwidth of sensitivity function and S*
 S.design.bandwidth=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4));
-S.design.star=S.design.value/s^(sys.h);
-S.design.star=minreal(S.design.star);
+S.design.star.value=S.design.value/s^(sys.h);
+S.design.star.value=minreal(S.design.star.value);
+S.design.star.dcgain=dcgain(S.design.star.value);
 
 %% Calculates sensitivity and complementary sensitivity function peaks
 T.design.p.value=1/(2*dampingCoefficient*sqrt(1-dampingCoefficient^2));

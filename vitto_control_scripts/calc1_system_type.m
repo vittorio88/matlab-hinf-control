@@ -11,27 +11,25 @@ ds.mu = 0;
 
 sys.p=Gp.nOriginPoles;
 
-% For reference input 
 % Function prototype is as follows
-% findminimumcontrollerorder(inputSignal, inputTf, cltfNoController)
-if r.type==1
-    [r.mu r.calculatedError] = findminimumcontrollerorder(r.signal, r.tf, r.maxError, r.errorSignalNoGc);
-end
+% findminimumcontrollerorder(errorString, GpTf, maxError)
+%% For reference input
+[r.mu r.calculatedError r.errorFunctionString] = ...
+findminimumcontrollerorder(r.errorString, Gp.nominal.tf, Ga, Gf, Gs, r.maxError);
 
-% For Actuator input
-if da.type==1
-[da.mu da.calculatedError] = findminimumcontrollerorder(da.signal, da.tf, da.maxError, da.errorSignalNoGc); 
-end
 
-% For Plant input
-if dp.type==1
-[dp.mu dp.calculatedError] = findminimumcontrollerorder(dp.signal, dp.tf, dp.maxError, dp.errorSignalNoGc);
-end
 
-% For Sensor input
-if ds.type==1
-[ds.mu ds.calculatedError] = findminimumcontrollerorder(ds.signal, ds.tf, ds.maxError, ds.errorSignalNoGc);
-end
+%% For Actuator input
+[da.mu da.calculatedError da.errorFunctionString] = ...
+findminimumcontrollerorder(da.errorString, Gp.nominal.tf, Ga, Gf, Gs, da.maxError);
+
+%% For Plant input
+[dp.mu dp.calculatedError dp.errorFunctionString] = ...
+findminimumcontrollerorder(dp.errorString, Gp.nominal.tf,  Ga, Gf, Gs, dp.maxError);
+
+%% For Sensor input
+[ds.mu ds.calculatedError ds.errorFunctionString] = ...
+findminimumcontrollerorder(ds.errorString, Gp.nominal.tf, Ga, Gf, Gs, ds.maxError);
 
 %% Find minimum amount of poles @ s=0 for Gc
 sys.mu=max(da.mu,dp.mu);

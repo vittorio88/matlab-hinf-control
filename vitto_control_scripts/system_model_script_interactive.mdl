@@ -1,35 +1,42 @@
 Model {
-  Name			  "system_model_generalized_inputs"
+  Name			  "system_model_script_interactive"
   Version		  7.4
   MdlSubVersion		  0
   GraphicalInterface {
     NumRootInports	    4
     Inport {
-      Name		      "dr_on"
+      Name		      "r.on"
     }
     Inport {
-      Name		      "da_on"
+      Name		      "da.on"
     }
     Inport {
-      Name		      "dp_on"
+      Name		      "dp.on"
     }
     Inport {
-      Name		      "ds_on"
+      Name		      "ds.on"
     }
-    NumRootOutports	    2
-    Outport {
-      BusObject		      ""
-      BusOutputAsStruct	      "off"
-      Name		      "Out1"
-    }
+    NumRootOutports	    1
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
       Name		      "Out2"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.144"
-    NumModelReferences	    0
+    ComputedModelVersion    "1.170"
+    NumModelReferences	    4
+    ModelReference {
+      ModelRefBlockPath	      "system_model_script_interactive/actuator disturbance signal|input_signal"
+    }
+    ModelReference {
+      ModelRefBlockPath	      "system_model_script_interactive/plant disturbance signal|input_signal"
+    }
+    ModelReference {
+      ModelRefBlockPath	      "system_model_script_interactive/reference signal|input_signal"
+    }
+    ModelReference {
+      ModelRefBlockPath	      "system_model_script_interactive/sensor disturbance signal|input_signal"
+    }
     NumTestPointedSignals   0
   }
   SavedCharacterEncoding  "windows-1252"
@@ -47,16 +54,16 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Vittorio"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Jul 21 16:59:04 2013"
-  RTWModifiedTimeStamp	  296326739
-  ModelVersionFormat	  "1.%<AutoIncrement:144>"
+  LastModifiedDate	  "Wed Sep 04 12:04:18 2013"
+  RTWModifiedTimeStamp	  300197056
+  ModelVersionFormat	  "1.%<AutoIncrement:170>"
   ConfigurationManager	  "None"
-  SampleTimeColors	  off
+  SampleTimeColors	  on
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "none"
   WideLines		  off
   ShowLineDimensions	  off
-  ShowPortDataTypes	  off
+  ShowPortDataTypes	  on
   ShowLoopsOnError	  on
   IgnoreBidirectionalLines off
   ShowStorageClass	  off
@@ -132,7 +139,7 @@ Model {
 	  $ObjectID		  2
 	  Version		  "1.6.0"
 	  StartTime		  "0.0"
-	  StopTime		  "50"
+	  StopTime		  "10"
 	  AbsTol		  "auto"
 	  FixedStep		  ".1"
 	  InitialStep		  "auto"
@@ -143,7 +150,7 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "auto"
+	  MaxStep		  "0.001"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
@@ -672,6 +679,13 @@ Model {
       Interpolate	      on
     }
     Block {
+      BlockType		      ModelReference
+      Variant		      off
+      GeneratePreprocessorConditionals off
+      CopyOfModelProtected    off
+      DefaultDataLogging      off
+    }
+    Block {
       BlockType		      Mux
       Inputs		      "4"
       DisplayOption	      "none"
@@ -719,22 +733,6 @@ Model {
       SampleTime	      "-1"
     }
     Block {
-      BlockType		      Sin
-      SineType		      "Time based"
-      TimeSource	      "Use simulation time"
-      SampleTime	      "-1"
-      VectorParams1D	      on
-    }
-    Block {
-      BlockType		      Step
-      Time		      "1"
-      Before		      "0"
-      After		      "1"
-      SampleTime	      "-1"
-      VectorParams1D	      on
-      ZeroCross		      on
-    }
-    Block {
       BlockType		      Sum
       IconShape		      "rectangular"
       Inputs		      "++"
@@ -773,8 +771,8 @@ Model {
     }
   }
   System {
-    Name		    "system_model_generalized_inputs"
-    Location		    [10, 82, 773, 814]
+    Name		    "system_model_script_interactive"
+    Location		    [810, 82, 1573, 814]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    212
@@ -786,23 +784,23 @@ Model {
     TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "93"
+    ZoomFactor		    "80"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    178
+    SIDHighWatermark	    271
     Block {
       BlockType		      Inport
-      Name		      "dr_on"
-      SID		      103
-      Position		      [680, 158, 710, 172]
+      Name		      "r.on"
+      SID		      233
+      Position		      [390, 63, 420, 77]
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
     }
     Block {
       BlockType		      Inport
-      Name		      "da_on"
-      SID		      106
-      Position		      [680, 208, 710, 222]
+      Name		      "da.on"
+      SID		      234
+      Position		      [390, 113, 420, 127]
       Port		      "2"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
@@ -810,9 +808,9 @@ Model {
     }
     Block {
       BlockType		      Inport
-      Name		      "dp_on"
-      SID		      105
-      Position		      [680, 263, 710, 277]
+      Name		      "dp.on"
+      SID		      235
+      Position		      [390, 168, 420, 182]
       Port		      "3"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
@@ -820,34 +818,19 @@ Model {
     }
     Block {
       BlockType		      Inport
-      Name		      "ds_on"
-      SID		      104
-      Position		      [680, 318, 710, 332]
+      Name		      "ds.on"
+      SID		      236
+      Position		      [390, 223, 420, 237]
       Port		      "4"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
     }
     Block {
-      BlockType		      Constant
-      Name		      "Actuator Disturbance"
-      SID		      21
-      Position		      [1143, 250, 1197, 290]
-      BlockRotation	      270
-      BlockMirror	      on
-      Value		      "da_coeff"
-      Port {
-	PortNumber		1
-	Name			"da"
-	RTWStorageClass		"Auto"
-	DataLoggingNameMode	"SignalName"
-      }
-    }
-    Block {
       BlockType		      Gain
       Name		      "Actuator Gain"
       SID		      10
-      Position		      [1095, 475, 1125, 505]
+      Position		      [1110, 655, 1140, 685]
       Gain		      "Ga"
       ParameterDataTypeMode   "Inherit via internal rule"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
@@ -856,11 +839,219 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
+      BlockType		      Gain
+      Name		      "Actuator Gain1"
+      SID		      271
+      Position		      [890, 40, 920, 70]
+      Gain		      "Kd"
+      ParameterDataTypeMode   "Inherit via internal rule"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant"
+      SID		      186
+      Position		      [450, 363, 515, 377]
+      NamePlacement	      "alternate"
+      Value		      "dp.coefficient"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant1"
+      SID		      188
+      Position		      [380, 378, 445, 392]
+      NamePlacement	      "alternate"
+      Value		      "dp.order"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant10"
+      SID		      223
+      Position		      [135, 552, 160, 568]
+      NamePlacement	      "alternate"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant12"
+      SID		      206
+      Position		      [450, 623, 515, 637]
+      NamePlacement	      "alternate"
+      Value		      "r.coefficient"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant13"
+      SID		      207
+      Position		      [380, 638, 445, 652]
+      NamePlacement	      "alternate"
+      Value		      "r.order"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant14"
+      SID		      208
+      Position		      [305, 653, 370, 667]
+      NamePlacement	      "alternate"
+      Value		      "r.type"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant15"
+      SID		      209
+      Position		      [235, 668, 300, 682]
+      NamePlacement	      "alternate"
+      Value		      "r.frequency"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant16"
+      SID		      222
+      Position		      [140, 682, 165, 698]
+      NamePlacement	      "alternate"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant18"
+      SID		      212
+      Position		      [450, 813, 515, 827]
+      NamePlacement	      "alternate"
+      Value		      "ds.coefficient"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant19"
+      SID		      213
+      Position		      [380, 828, 445, 842]
+      NamePlacement	      "alternate"
+      Value		      "ds.order"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant2"
+      SID		      189
+      Position		      [305, 393, 370, 407]
+      NamePlacement	      "alternate"
+      Value		      "dp.type"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant20"
+      SID		      214
+      Position		      [305, 843, 370, 857]
+      NamePlacement	      "alternate"
+      Value		      "ds.type"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant21"
+      SID		      215
+      Position		      [235, 858, 300, 872]
+      NamePlacement	      "alternate"
+      Value		      "ds.frequency"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant22"
+      SID		      227
+      Position		      [135, 872, 160, 888]
+      NamePlacement	      "alternate"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant3"
+      SID		      190
+      Position		      [235, 408, 300, 422]
+      NamePlacement	      "alternate"
+      Value		      "dp.frequency"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant4"
+      SID		      225
+      Position		      [135, 422, 160, 438]
+      NamePlacement	      "alternate"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant6"
+      SID		      200
+      Position		      [450, 493, 515, 507]
+      NamePlacement	      "alternate"
+      Value		      "da.coefficient"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant7"
+      SID		      201
+      Position		      [380, 508, 445, 522]
+      NamePlacement	      "alternate"
+      Value		      "da.order"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant8"
+      SID		      202
+      Position		      [305, 523, 370, 537]
+      NamePlacement	      "alternate"
+      Value		      "da.type"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant9"
+      SID		      203
+      Position		      [235, 538, 300, 552]
+      NamePlacement	      "alternate"
+      Value		      "da.frequency"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
       BlockType		      Reference
       Name		      "Controller"
       SID		      1
       Ports		      [1, 1]
-      Position		      [940, 472, 1035, 508]
+      Position		      [955, 652, 1050, 688]
       LibraryVersion	      "1.107"
       SourceBlock	      "cstblocks/LTI System"
       SourceType	      "LTI Block"
@@ -872,51 +1063,18 @@ Model {
       RTWMemSecDataConstants  "Inherit from model"
       RTWMemSecDataInternal   "Inherit from model"
       RTWMemSecDataParameters "Inherit from model"
-      sys		      "Gcmod"
+      sys		      "Gc.mod.value"
       IC		      "[]"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Dist. Type"
-      SID		      38
-      Position		      [1374, 140, 1436, 165]
-      BlockRotation	      270
-      BlockMirror	      on
-      NamePlacement	      "alternate"
-      Value		      "dp_type"
     }
     Block {
       BlockType		      Scope
       Name		      "Error Scope"
-      SID		      109
+      SID		      249
       Ports		      [1]
-      Position		      [2010, 629, 2040, 661]
+      Position		      [2045, 739, 2075, 771]
       Floating		      off
       Location		      [785, 56, 1569, 852]
       Open		      off
-      NumInputPorts	      "1"
-      List {
-	ListType		AxesTitles
-	axes1			"%<SignalLabel>"
-      }
-      TimeRange		      "0.5             "
-      YMin		      "0"
-      YMax		      "2.5"
-      SaveName		      "ScopeData3"
-      DataFormat	      "StructureWithTime"
-      LimitDataPoints	      off
-      SampleInput	      on
-      SampleTime	      "0"
-    }
-    Block {
-      BlockType		      Scope
-      Name		      "Error Scope1"
-      SID		      178
-      Ports		      [1]
-      Position		      [1000, 714, 1030, 746]
-      Floating		      off
-      Location		      [785, 56, 1569, 852]
-      Open		      on
       NumInputPorts	      "1"
       List {
 	ListType		AxesTitles
@@ -935,7 +1093,8 @@ Model {
       BlockType		      Gain
       Name		      "Feed-forward Gain"
       SID		      13
-      Position		      [970, 610, 1000, 640]
+      Position		      [985, 790, 1015, 820]
+      BlockRotation	      359
       BlockMirror	      on
       NamePlacement	      "alternate"
       Gain		      "Gf"
@@ -947,68 +1106,43 @@ Model {
     }
     Block {
       BlockType		      From
-      Name		      "From da_on"
-      SID		      97
-      Position		      [1230, 306, 1270, 334]
-      BlockMirror	      on
-      GotoTag		      "da_on"
+      Name		      "From"
+      SID		      241
+      Position		      [80, 691, 120, 719]
+      GotoTag		      "r_on"
     }
     Block {
       BlockType		      From
       Name		      "From da_on1"
-      SID		      117
-      Position		      [1869, 90, 1911, 130]
+      SID		      250
+      Position		      [1904, 200, 1946, 240]
       BlockRotation	      270
       BlockMirror	      on
       GotoTag		      "da_on"
     }
     Block {
       BlockType		      From
-      Name		      "From dp_on"
-      SID		      98
-      Position		      [1465, 321, 1505, 349]
-      BlockMirror	      on
-      GotoTag		      "dp_on"
-    }
-    Block {
-      BlockType		      From
       Name		      "From dp_on1"
-      SID		      118
-      Position		      [1907, 135, 1943, 175]
+      SID		      251
+      Position		      [1942, 245, 1978, 285]
       BlockRotation	      270
       BlockMirror	      on
       GotoTag		      "dp_on"
-    }
-    Block {
-      BlockType		      From
-      Name		      "From dr_on"
-      SID		      95
-      Position		      [683, 525, 737, 570]
-      BlockRotation	      270
-      GotoTag		      "dr_on"
     }
     Block {
       BlockType		      From
       Name		      "From dr_on1"
-      SID		      116
-      Position		      [1828, 40, 1882, 85]
+      SID		      252
+      Position		      [1863, 150, 1917, 195]
       BlockRotation	      270
       BlockMirror	      on
       GotoTag		      "dr_on"
     }
     Block {
       BlockType		      From
-      Name		      "From ds_on"
-      SID		      96
-      Position		      [1230, 766, 1270, 794]
-      BlockMirror	      on
-      GotoTag		      "ds_on"
-    }
-    Block {
-      BlockType		      From
       Name		      "From ds_on1"
-      SID		      119
-      Position		      [1941, 180, 1979, 220]
+      SID		      253
+      Position		      [1976, 290, 2014, 330]
       BlockRotation	      270
       BlockMirror	      on
       GotoTag		      "ds_on"
@@ -1016,16 +1150,16 @@ Model {
     Block {
       BlockType		      From
       Name		      "From r"
-      SID		      52
-      Position		      [1040, 51, 1080, 79]
+      SID		      245
+      Position		      [815, 41, 855, 69]
       NamePlacement	      "alternate"
       GotoTag		      "r"
     }
     Block {
       BlockType		      From
       Name		      "From r3"
-      SID		      174
-      Position		      [1736, 115, 1764, 155]
+      SID		      254
+      Position		      [1771, 225, 1799, 265]
       BlockRotation	      270
       BlockMirror	      on
       GotoTag		      "r"
@@ -1033,215 +1167,174 @@ Model {
     Block {
       BlockType		      From
       Name		      "From y"
-      SID		      54
-      Position		      [985, 71, 1025, 99]
+      SID		      246
+      Position		      [835, 91, 875, 119]
       NamePlacement	      "alternate"
       GotoTag		      "y"
     }
     Block {
       BlockType		      From
       Name		      "From y1"
-      SID		      127
-      Position		      [1725, 226, 1765, 254]
+      SID		      255
+      Position		      [1760, 336, 1800, 364]
       NamePlacement	      "alternate"
       GotoTag		      "y"
     }
     Block {
       BlockType		      From
       Name		      "From y2"
-      SID		      128
-      Position		      [1725, 276, 1765, 304]
+      SID		      256
+      Position		      [1760, 386, 1800, 414]
       NamePlacement	      "alternate"
       GotoTag		      "y"
     }
     Block {
       BlockType		      From
       Name		      "From y3"
-      SID		      130
-      Position		      [1725, 321, 1765, 349]
+      SID		      257
+      Position		      [1760, 431, 1800, 459]
       NamePlacement	      "alternate"
-      GotoTag		      "y"
-    }
-    Block {
-      BlockType		      From
-      Name		      "From y5"
-      SID		      79
-      Position		      [665, 61, 705, 89]
       GotoTag		      "y"
     }
     Block {
       BlockType		      From
       Name		      "From y7"
-      SID		      172
-      Position		      [1660, 186, 1700, 214]
+      SID		      258
+      Position		      [1695, 296, 1735, 324]
       NamePlacement	      "alternate"
       GotoTag		      "y"
     }
     Block {
-      BlockType		      Gain
-      Name		      "Gain1"
-      SID		      11
-      Position		      [685, 465, 715, 495]
-      Gain		      "Gr"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
+      BlockType		      From
+      Name		      "From1"
+      SID		      242
+      Position		      [80, 561, 120, 589]
+      GotoTag		      "da_on"
+    }
+    Block {
+      BlockType		      From
+      Name		      "From2"
+      SID		      243
+      Position		      [80, 431, 120, 459]
+      GotoTag		      "dp_on"
+    }
+    Block {
+      BlockType		      From
+      Name		      "From3"
+      SID		      244
+      Position		      [80, 881, 120, 909]
+      GotoTag		      "ds_on"
+    }
+    Block {
+      BlockType		      Goto
+      Name		      "Goto da"
+      SID		      219
+      Position		      [1265, 525, 1305, 555]
+      GotoTag		      "da"
+      TagVisibility	      "local"
+    }
+    Block {
+      BlockType		      Goto
+      Name		      "Goto da1"
+      SID		      232
+      Position		      [870, 605, 910, 635]
+      GotoTag		      "r"
+      TagVisibility	      "local"
     }
     Block {
       BlockType		      Goto
       Name		      "Goto da_on"
-      SID		      100
-      Position		      [795, 200, 835, 230]
+      SID		      237
+      Position		      [505, 105, 545, 135]
       GotoTag		      "da_on"
       TagVisibility	      "local"
     }
     Block {
       BlockType		      Goto
+      Name		      "Goto dp"
+      SID		      218
+      Position		      [1515, 395, 1555, 425]
+      GotoTag		      "dp"
+      TagVisibility	      "local"
+    }
+    Block {
+      BlockType		      Goto
       Name		      "Goto dp_on"
-      SID		      101
-      Position		      [795, 255, 835, 285]
+      SID		      238
+      Position		      [505, 160, 545, 190]
       GotoTag		      "dp_on"
       TagVisibility	      "local"
     }
     Block {
       BlockType		      Goto
       Name		      "Goto dr_on"
-      SID		      99
-      Position		      [795, 150, 835, 180]
-      GotoTag		      "dr_on"
+      SID		      239
+      Position		      [505, 55, 545, 85]
+      GotoTag		      "r_on"
+      TagVisibility	      "local"
+    }
+    Block {
+      BlockType		      Goto
+      Name		      "Goto ds"
+      SID		      220
+      Position		      [1280, 845, 1320, 875]
+      GotoTag		      "ds"
       TagVisibility	      "local"
     }
     Block {
       BlockType		      Goto
       Name		      "Goto ds_on"
-      SID		      102
-      Position		      [795, 310, 835, 340]
+      SID		      240
+      Position		      [505, 215, 545, 245]
       GotoTag		      "ds_on"
-      TagVisibility	      "local"
-    }
-    Block {
-      BlockType		      Goto
-      Name		      "Goto r"
-      SID		      51
-      Position		      [645, 595, 675, 635]
-      BlockRotation	      270
-      BlockMirror	      on
-      NamePlacement	      "alternate"
-      GotoTag		      "r"
       TagVisibility	      "local"
     }
     Block {
       BlockType		      Goto
       Name		      "Goto y"
       SID		      53
-      Position		      [1570, 475, 1610, 505]
+      Position		      [1515, 655, 1555, 685]
       GotoTag		      "y"
       TagVisibility	      "local"
     }
     Block {
       BlockType		      Ground
-      Name		      "Ground"
-      SID		      136
-      Position		      [730, 590, 750, 610]
-      BlockRotation	      270
-    }
-    Block {
-      BlockType		      Ground
-      Name		      "Ground1"
-      SID		      137
-      Position		      [1245, 730, 1265, 750]
-      BlockMirror	      on
-      NamePlacement	      "alternate"
-    }
-    Block {
-      BlockType		      Ground
-      Name		      "Ground2"
-      SID		      138
-      Position		      [1240, 355, 1260, 375]
-      BlockMirror	      on
-    }
-    Block {
-      BlockType		      Ground
-      Name		      "Ground3"
-      SID		      139
-      Position		      [1475, 365, 1495, 385]
-      BlockMirror	      on
-    }
-    Block {
-      BlockType		      Ground
       Name		      "Ground4"
-      SID		      140
-      Position		      [2010, 355, 2030, 375]
+      SID		      259
+      Position		      [2045, 465, 2065, 485]
       BlockMirror	      on
       NamePlacement	      "alternate"
     }
     Block {
       BlockType		      Ground
       Name		      "Ground5"
-      SID		      141
-      Position		      [2010, 390, 2030, 410]
+      SID		      260
+      Position		      [2045, 500, 2065, 520]
       BlockMirror	      on
       NamePlacement	      "alternate"
     }
     Block {
       BlockType		      Ground
       Name		      "Ground6"
-      SID		      142
-      Position		      [2010, 430, 2030, 450]
+      SID		      261
+      Position		      [2045, 540, 2065, 560]
       BlockMirror	      on
       NamePlacement	      "alternate"
     }
     Block {
       BlockType		      Ground
       Name		      "Ground7"
-      SID		      143
-      Position		      [2010, 470, 2030, 490]
+      SID		      262
+      Position		      [2045, 580, 2065, 600]
       BlockMirror	      on
       NamePlacement	      "alternate"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Input Order"
-      SID		      32
-      Position		      [495, 465, 525, 495]
-      Value		      "dr_h"
-    }
-    Block {
-      BlockType		      Switch
-      Name		      "Input Type Switch"
-      SID		      30
-      Position		      [1390, 230, 1420, 260]
-      BlockRotation	      270
-      BlockMirror	      on
-      NamePlacement	      "alternate"
-      Threshold		      "2"
-      InputSameDT	      off
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Switch
-      Name		      "Input type switch"
-      SID		      26
-      Position		      [615, 465, 645, 495]
-      Threshold		      "1"
-      InputSameDT	      off
-      SaturateOnIntegerOverflow	off
-      Port {
-	PortNumber		1
-	Name			"r"
-	RTWStorageClass		"Auto"
-	DataLoggingNameMode	"SignalName"
-	DataLoggingName		"simulink_r"
-      }
     }
     Block {
       BlockType		      Mux
       Name		      "Mux"
-      SID		      23
+      SID		      247
       Ports		      [2, 1]
-      Position		      [1120, 56, 1125, 94]
+      Position		      [970, 76, 975, 114]
       ShowName		      off
       Inputs		      "2"
       DisplayOption	      "bar"
@@ -1251,7 +1344,7 @@ Model {
       Name		      "Nominal Plant"
       SID		      4
       Ports		      [1, 1]
-      Position		      [1250, 472, 1345, 508]
+      Position		      [1265, 652, 1360, 688]
       LibraryVersion	      "1.107"
       SourceBlock	      "cstblocks/LTI System"
       SourceType	      "LTI Block"
@@ -1263,103 +1356,14 @@ Model {
       RTWMemSecDataConstants  "Inherit from model"
       RTWMemSecDataInternal   "Inherit from model"
       RTWMemSecDataParameters "Inherit from model"
-      sys		      "Gp_nominal"
+      sys		      "Gp.nominal.tf"
       IC		      "[]"
-    }
-    Block {
-      BlockType		      Gain
-      Name		      "Plant Disturbance Gain"
-      SID		      18
-      Position		      [1390, 285, 1420, 315]
-      BlockRotation	      270
-      BlockMirror	      on
-      Gain		      "Gd"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-      Port {
-	PortNumber		1
-	Name			"dp"
-	RTWStorageClass		"Auto"
-	DataLoggingNameMode	"SignalName"
-      }
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Plant Polynomial Disturbance"
-      SID		      24
-      Position		      [1462, 140, 1528, 170]
-      BlockRotation	      270
-      BlockMirror	      on
-      Value		      "dp_coeff"
-    }
-    Block {
-      BlockType		      Sin
-      Name		      "Plant Sinusoidal Disturbance"
-      SID		      20
-      Ports		      [0, 1]
-      Position		      [1260, 140, 1290, 170]
-      BlockRotation	      270
-      BlockMirror	      on
-      NamePlacement	      "alternate"
-      Amplitude		      "dp_coeff"
-      Bias		      "0"
-      Frequency		      "dp_freq"
-      Phase		      "0"
-      Samples		      "10"
-      Offset		      "0"
-      SampleTime	      "0"
-    }
-    Block {
-      BlockType		      Reference
-      Name		      "Ramp"
-      SID		      22
-      Ports		      [0, 1]
-      Position		      [495, 410, 525, 440]
-      LibraryVersion	      "1.762"
-      SourceBlock	      "simulink/Sources/Ramp"
-      SourceType	      "Ramp"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      FunctionWithSeparateData off
-      RTWMemSecFuncInitTerm   "Inherit from model"
-      RTWMemSecFuncExecute    "Inherit from model"
-      RTWMemSecDataConstants  "Inherit from model"
-      RTWMemSecDataInternal   "Inherit from model"
-      RTWMemSecDataParameters "Inherit from model"
-      slope		      "dr_coeff"
-      start		      "0"
-      X0		      "0"
-      VectorParams1D	      on
-    }
-    Block {
-      BlockType		      Sin
-      Name		      "Sensor Disturbance"
-      SID		      19
-      Ports		      [0, 1]
-      Position		      [1155, 835, 1185, 865]
-      BlockRotation	      270
-      Amplitude		      "ds_coeff"
-      Bias		      "0"
-      Frequency		      "ds_freq"
-      Phase		      "0"
-      Samples		      "10"
-      Offset		      "0"
-      SampleTime	      "0"
-      Port {
-	PortNumber		1
-	Name			"ds"
-	RTWStorageClass		"Auto"
-	DataLoggingNameMode	"SignalName"
-      }
     }
     Block {
       BlockType		      Gain
       Name		      "Sensor Gain"
       SID		      12
-      Position		      [1280, 610, 1310, 640]
+      Position		      [1295, 790, 1325, 820]
       BlockMirror	      on
       Gain		      "Gs"
       ParameterDataTypeMode   "Inherit via internal rule"
@@ -1369,20 +1373,11 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      Step
-      Name		      "Step"
-      SID		      9
-      Position		      [495, 520, 525, 550]
-      Time		      "0"
-      After		      "dr_coeff"
-      SampleTime	      "0"
-    }
-    Block {
       BlockType		      Sum
       Name		      "Sum"
       SID		      14
       Ports		      [2, 1]
-      Position		      [1405, 480, 1425, 500]
+      Position		      [1420, 660, 1440, 680]
       ShowName		      off
       IconShape		      "round"
       Inputs		      "++|"
@@ -1402,7 +1397,7 @@ Model {
       Name		      "Sum1"
       SID		      15
       Ports		      [2, 1]
-      Position		      [1170, 615, 1190, 635]
+      Position		      [1185, 795, 1205, 815]
       BlockMirror	      on
       NamePlacement	      "alternate"
       ShowName		      off
@@ -1416,9 +1411,9 @@ Model {
     Block {
       BlockType		      Sum
       Name		      "Sum10"
-      SID		      173
+      SID		      263
       Ports		      [2, 1]
-      Position		      [1735, 190, 1765, 210]
+      Position		      [1770, 300, 1800, 320]
       ShowName		      off
       IconShape		      "round"
       Inputs		      "-+|"
@@ -1432,7 +1427,7 @@ Model {
       Name		      "Sum2"
       SID		      16
       Ports		      [2, 1]
-      Position		      [850, 480, 870, 500]
+      Position		      [865, 660, 885, 680]
       ShowName		      off
       IconShape		      "round"
       Inputs		      "|+-"
@@ -1446,7 +1441,7 @@ Model {
       Name		      "Sum3"
       SID		      17
       Ports		      [2, 1]
-      Position		      [1165, 475, 1195, 505]
+      Position		      [1180, 655, 1210, 685]
       NamePlacement	      "alternate"
       ShowName		      off
       IconShape		      "round"
@@ -1459,9 +1454,9 @@ Model {
     Block {
       BlockType		      Sum
       Name		      "Sum9"
-      SID		      132
+      SID		      264
       Ports		      [4, 1]
-      Position		      [1890, 560, 1920, 590]
+      Position		      [1925, 670, 1955, 700]
       BlockRotation	      270
       BlockMirror	      on
       NamePlacement	      "alternate"
@@ -1476,36 +1471,40 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      Switch
-      Name		      "da Test Switch"
-      SID		      90
-      Position		      [1165, 395, 1195, 425]
-      BlockRotation	      270
-      BlockMirror	      on
-      NamePlacement	      "alternate"
-      Threshold		      "1"
-      InputSameDT	      off
-      SaturateOnIntegerOverflow	off
+      BlockType		      ModelReference
+      Name		      "actuator disturbance signal"
+      SID		      183
+      Ports		      [6, 1]
+      Position		      [540, 490, 755, 585]
+      ModelNameDialog	      "input_signal"
+      SimulationMode	      "Accelerator"
+      ModelReferenceVersion   "1.17"
+      List {
+	ListType		InputPortNames
+	port0			"coeff"
+	port1			"order"
+	port2			"signal type (off, poly, or sine)"
+	port3			"sine frequency"
+	port4			"tf or gain"
+	port5			"on/off"
+      }
+      List {
+	ListType		OutputPortNames
+	port0			"Out signal"
+      }
+      List {
+	ListType		OutputPortOutputBusAsStructs
+	port0			"off"
+      }
+      CopyOfModelName	      "input_signal"
     }
     Block {
       BlockType		      Switch
       Name		      "da Test Switch1"
-      SID		      113
-      Position		      [1875, 430, 1905, 460]
+      SID		      265
+      Position		      [1910, 540, 1940, 570]
       BlockRotation	      270
       BlockMirror	      on
-      Threshold		      "1"
-      InputSameDT	      off
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Switch
-      Name		      "dp Test Switch"
-      SID		      91
-      Position		      [1400, 395, 1430, 425]
-      BlockRotation	      270
-      BlockMirror	      on
-      NamePlacement	      "alternate"
       Threshold		      "1"
       InputSameDT	      off
       SaturateOnIntegerOverflow	off
@@ -1513,19 +1512,10 @@ Model {
     Block {
       BlockType		      Switch
       Name		      "dp Test Switch1"
-      SID		      114
-      Position		      [1910, 470, 1940, 500]
+      SID		      266
+      Position		      [1945, 580, 1975, 610]
       BlockRotation	      270
       BlockMirror	      on
-      Threshold		      "1"
-      InputSameDT	      off
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Switch
-      Name		      "dr Test Switch"
-      SID		      88
-      Position		      [760, 475, 790, 505]
       Threshold		      "1"
       InputSameDT	      off
       SaturateOnIntegerOverflow	off
@@ -1533,8 +1523,8 @@ Model {
     Block {
       BlockType		      Switch
       Name		      "dr Test Switch1"
-      SID		      112
-      Position		      [1840, 385, 1870, 415]
+      SID		      267
+      Position		      [1875, 495, 1905, 525]
       BlockRotation	      270
       BlockMirror	      on
       Threshold		      "1"
@@ -1543,19 +1533,9 @@ Model {
     }
     Block {
       BlockType		      Switch
-      Name		      "ds Test Switch"
-      SID		      89
-      Position		      [1165, 680, 1195, 710]
-      BlockRotation	      270
-      Threshold		      "1"
-      InputSameDT	      off
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Switch
       Name		      "ds Test Switch1"
-      SID		      115
-      Position		      [1945, 520, 1975, 550]
+      SID		      268
+      Position		      [1980, 630, 2010, 660]
       BlockRotation	      270
       BlockMirror	      on
       Threshold		      "1"
@@ -1565,9 +1545,9 @@ Model {
     Block {
       BlockType		      Scope
       Name		      "in vs out scope"
-      SID		      8
+      SID		      248
       Ports		      [1]
-      Position		      [1170, 59, 1200, 91]
+      Position		      [1020, 79, 1050, 111]
       Floating		      off
       Location		      [445, 61, 1229, 857]
       Open		      off
@@ -1585,23 +1565,204 @@ Model {
       SampleTime	      "0"
     }
     Block {
-      BlockType		      Outport
-      Name		      "Out1"
-      SID		      80
-      Position		      [830, 68, 860, 82]
-      IconDisplay	      "Port number"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
+      BlockType		      Scope
+      Name		      "in vs out scope1"
+      SID		      270
+      Ports		      [1]
+      Position		      [1045, 234, 1075, 266]
+      Floating		      off
+      Location		      [445, 61, 1229, 857]
+      Open		      off
+      NumInputPorts	      "1"
+      List {
+	ListType		AxesTitles
+	axes1			"%<SignalLabel>"
+      }
+      TimeRange		      "0.5             "
+      YMin		      "-1"
+      YMax		      "1"
+      SaveName		      "ScopeData2"
+      DataFormat	      "StructureWithTime"
+      LimitDataPoints	      off
+      SampleInput	      on
+      SampleTime	      "0"
+    }
+    Block {
+      BlockType		      ModelReference
+      Name		      "plant disturbance signal"
+      SID		      184
+      Ports		      [6, 1]
+      Position		      [540, 359, 755, 456]
+      ModelNameDialog	      "input_signal"
+      SimulationMode	      "Accelerator"
+      ModelReferenceVersion   "1.17"
+      List {
+	ListType		InputPortNames
+	port0			"coeff"
+	port1			"order"
+	port2			"signal type (off, poly, or sine)"
+	port3			"sine frequency"
+	port4			"tf or gain"
+	port5			"on/off"
+      }
+      List {
+	ListType		OutputPortNames
+	port0			"Out signal"
+      }
+      List {
+	ListType		OutputPortOutputBusAsStructs
+	port0			"off"
+      }
+      CopyOfModelName	      "input_signal"
+    }
+    Block {
+      BlockType		      ModelReference
+      Name		      "reference signal"
+      SID		      182
+      Ports		      [6, 1]
+      Position		      [540, 621, 760, 714]
+      ModelNameDialog	      "input_signal"
+      SimulationMode	      "Accelerator"
+      ModelReferenceVersion   "1.17"
+      List {
+	ListType		InputPortNames
+	port0			"coeff"
+	port1			"order"
+	port2			"signal type (off, poly, or sine)"
+	port3			"sine frequency"
+	port4			"tf or gain"
+	port5			"on/off"
+      }
+      List {
+	ListType		OutputPortNames
+	port0			"Out signal"
+      }
+      List {
+	ListType		OutputPortOutputBusAsStructs
+	port0			"off"
+      }
+      CopyOfModelName	      "input_signal"
+    }
+    Block {
+      BlockType		      ModelReference
+      Name		      "sensor disturbance signal"
+      SID		      185
+      Ports		      [6, 1]
+      Position		      [540, 809, 760, 906]
+      ModelNameDialog	      "input_signal"
+      SimulationMode	      "Accelerator"
+      ModelReferenceVersion   "1.17"
+      List {
+	ListType		InputPortNames
+	port0			"coeff"
+	port1			"order"
+	port2			"signal type (off, poly, or sine)"
+	port3			"sine frequency"
+	port4			"tf or gain"
+	port5			"on/off"
+      }
+      List {
+	ListType		OutputPortNames
+	port0			"Out signal"
+      }
+      List {
+	ListType		OutputPortOutputBusAsStructs
+	port0			"off"
+      }
+      CopyOfModelName	      "input_signal"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "tf"
+      SID		      221
+      Ports		      [1, 1]
+      Position		      [185, 682, 235, 698]
+      NamePlacement	      "alternate"
+      LibraryVersion	      "1.107"
+      SourceBlock	      "cstblocks/LTI System"
+      SourceType	      "LTI Block"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      FunctionWithSeparateData off
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      sys		      "r.tf"
+      IC		      "[]"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "tf1"
+      SID		      224
+      Ports		      [1, 1]
+      Position		      [180, 552, 230, 568]
+      NamePlacement	      "alternate"
+      LibraryVersion	      "1.107"
+      SourceBlock	      "cstblocks/LTI System"
+      SourceType	      "LTI Block"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      FunctionWithSeparateData off
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      sys		      "da.tf"
+      IC		      "[]"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "tf2"
+      SID		      226
+      Ports		      [1, 1]
+      Position		      [180, 422, 230, 438]
+      NamePlacement	      "alternate"
+      LibraryVersion	      "1.107"
+      SourceBlock	      "cstblocks/LTI System"
+      SourceType	      "LTI Block"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      FunctionWithSeparateData off
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      sys		      "dp.tf"
+      IC		      "[]"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "tf3"
+      SID		      228
+      Ports		      [1, 1]
+      Position		      [175, 872, 225, 888]
+      NamePlacement	      "alternate"
+      LibraryVersion	      "1.107"
+      SourceBlock	      "cstblocks/LTI System"
+      SourceType	      "LTI Block"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      FunctionWithSeparateData off
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      sys		      "ds.tf"
+      IC		      "[]"
     }
     Block {
       BlockType		      Outport
       Name		      "Out2"
-      SID		      131
-      Position		      [1948, 705, 1962, 735]
+      SID		      269
+      Position		      [1983, 815, 1997, 845]
       BlockRotation	      270
       BlockMirror	      on
       NamePlacement	      "alternate"
-      Port		      "2"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
@@ -1637,16 +1798,8 @@ Model {
     Line {
       SrcBlock		      "Sum2"
       SrcPort		      1
-      Points		      [25, 0]
-      Branch {
-	DstBlock		"Controller"
-	DstPort			1
-      }
-      Branch {
-	Points			[0, 240]
-	DstBlock		"Error Scope1"
-	DstPort			1
-      }
+      DstBlock		      "Controller"
+      DstPort		      1
     }
     Line {
       SrcBlock		      "Sensor Gain"
@@ -1680,186 +1833,262 @@ Model {
       DstPort		      2
     }
     Line {
-      SrcBlock		      "Mux"
+      SrcBlock		      "reference signal"
       SrcPort		      1
-      DstBlock		      "in vs out scope"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Input Order"
-      SrcPort		      1
-      DstBlock		      "Input type switch"
-      DstPort		      2
-    }
-    Line {
-      Name		      "r"
-      Labels		      [0, 0]
-      SrcBlock		      "Input type switch"
-      SrcPort		      1
-      Points		      [10, 0]
+      Points		      [45, 0]
       Branch {
-	DstBlock		"Gain1"
+	DstBlock		"Sum2"
 	DstPort			1
       }
       Branch {
-	DstBlock		"Goto r"
+	Points			[0, -50]
+	DstBlock		"Goto da1"
 	DstPort			1
       }
     }
     Line {
-      SrcBlock		      "Dist. Type"
+      SrcBlock		      "actuator disturbance signal"
       SrcPort		      1
-      DstBlock		      "Input Type Switch"
-      DstPort		      2
+      Points		      [435, 0]
+      Branch {
+	DstBlock		"Sum3"
+	DstPort			1
+      }
+      Branch {
+	DstBlock		"Goto da"
+	DstPort			1
+      }
     }
     Line {
-      SrcBlock		      "Ramp"
+      SrcBlock		      "plant disturbance signal"
       SrcPort		      1
-      Points		      [35, 0; 0, 45]
-      DstBlock		      "Input type switch"
+      Points		      [130, 0]
+      Branch {
+	Points			[540, 0]
+	Branch {
+	  DstBlock		  "Sum"
+	  DstPort		  1
+	}
+	Branch {
+	  DstBlock		  "Goto dp"
+	  DstPort		  1
+	}
+      }
+      Branch {
+	Points			[0, -160]
+	DstBlock		"in vs out scope1"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "sensor disturbance signal"
+      SrcPort		      1
+      Points		      [430, 0]
+      Branch {
+	DstBlock		"Sum1"
+	DstPort			2
+      }
+      Branch {
+	DstBlock		"Goto ds"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Constant"
+      SrcPort		      1
+      DstBlock		      "plant disturbance signal"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Step"
+      SrcBlock		      "Constant1"
       SrcPort		      1
-      Points		      [35, 0; 0, -45]
-      DstBlock		      "Input type switch"
+      DstBlock		      "plant disturbance signal"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Constant2"
+      SrcPort		      1
+      DstBlock		      "plant disturbance signal"
       DstPort		      3
     }
     Line {
-      SrcBlock		      "Input Type Switch"
+      SrcBlock		      "Constant3"
       SrcPort		      1
-      DstBlock		      "Plant Disturbance Gain"
+      DstBlock		      "plant disturbance signal"
+      DstPort		      4
+    }
+    Line {
+      SrcBlock		      "tf2"
+      SrcPort		      1
+      DstBlock		      "plant disturbance signal"
+      DstPort		      5
+    }
+    Line {
+      SrcBlock		      "Constant6"
+      SrcPort		      1
+      DstBlock		      "actuator disturbance signal"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Plant Sinusoidal Disturbance"
+      SrcBlock		      "Constant7"
       SrcPort		      1
-      Points		      [0, 20; 120, 0]
-      DstBlock		      "Input Type Switch"
-      DstPort		      1
+      DstBlock		      "actuator disturbance signal"
+      DstPort		      2
     }
     Line {
-      SrcBlock		      "Plant Polynomial Disturbance"
+      SrcBlock		      "Constant8"
       SrcPort		      1
-      Points		      [0, 20; -80, 0]
-      DstBlock		      "Input Type Switch"
+      DstBlock		      "actuator disturbance signal"
       DstPort		      3
     }
     Line {
-      Name		      "dp"
-      Labels		      [0, 0]
-      SrcBlock		      "Plant Disturbance Gain"
+      SrcBlock		      "Constant9"
       SrcPort		      1
-      DstBlock		      "dp Test Switch"
+      DstBlock		      "actuator disturbance signal"
+      DstPort		      4
+    }
+    Line {
+      SrcBlock		      "tf1"
+      SrcPort		      1
+      DstBlock		      "actuator disturbance signal"
+      DstPort		      5
+    }
+    Line {
+      SrcBlock		      "From1"
+      SrcPort		      1
+      DstBlock		      "actuator disturbance signal"
+      DstPort		      6
+    }
+    Line {
+      SrcBlock		      "Constant12"
+      SrcPort		      1
+      DstBlock		      "reference signal"
       DstPort		      1
     }
     Line {
-      Name		      "ds"
-      Labels		      [0, 0]
-      SrcBlock		      "Sensor Disturbance"
+      SrcBlock		      "Constant13"
       SrcPort		      1
-      DstBlock		      "ds Test Switch"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "From r"
-      SrcPort		      1
-      DstBlock		      "Mux"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "From y"
-      SrcPort		      1
-      DstBlock		      "Mux"
+      DstBlock		      "reference signal"
       DstPort		      2
     }
     Line {
-      SrcBlock		      "From y5"
+      SrcBlock		      "Constant14"
       SrcPort		      1
-      DstBlock		      "Out1"
+      DstBlock		      "reference signal"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "Constant15"
+      SrcPort		      1
+      DstBlock		      "reference signal"
+      DstPort		      4
+    }
+    Line {
+      SrcBlock		      "tf"
+      SrcPort		      1
+      DstBlock		      "reference signal"
+      DstPort		      5
+    }
+    Line {
+      SrcBlock		      "From"
+      SrcPort		      1
+      DstBlock		      "reference signal"
+      DstPort		      6
+    }
+    Line {
+      SrcBlock		      "Constant18"
+      SrcPort		      1
+      DstBlock		      "sensor disturbance signal"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Gain1"
+      SrcBlock		      "Constant19"
       SrcPort		      1
-      DstBlock		      "dr Test Switch"
+      DstBlock		      "sensor disturbance signal"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Constant20"
+      SrcPort		      1
+      DstBlock		      "sensor disturbance signal"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "Constant21"
+      SrcPort		      1
+      DstBlock		      "sensor disturbance signal"
+      DstPort		      4
+    }
+    Line {
+      SrcBlock		      "tf3"
+      SrcPort		      1
+      DstBlock		      "sensor disturbance signal"
+      DstPort		      5
+    }
+    Line {
+      SrcBlock		      "From3"
+      SrcPort		      1
+      DstBlock		      "sensor disturbance signal"
+      DstPort		      6
+    }
+    Line {
+      SrcBlock		      "Constant16"
+      SrcPort		      1
+      DstBlock		      "tf"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "dr Test Switch"
+      SrcBlock		      "Constant10"
       SrcPort		      1
-      DstBlock		      "Sum2"
+      DstBlock		      "tf1"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "From dr_on"
+      SrcBlock		      "Constant4"
       SrcPort		      1
-      Points		      [0, -30]
-      DstBlock		      "dr Test Switch"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "da Test Switch"
-      SrcPort		      1
-      DstBlock		      "Sum3"
+      DstBlock		      "tf2"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "From da_on"
+      SrcBlock		      "Constant22"
       SrcPort		      1
-      Points		      [-45, 0]
-      DstBlock		      "da Test Switch"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "ds Test Switch"
-      SrcPort		      1
-      DstBlock		      "Sum1"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "dp Test Switch"
-      SrcPort		      1
-      DstBlock		      "Sum"
+      DstBlock		      "tf3"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "From dp_on"
-      SrcPort		      1
-      Points		      [-45, 0]
-      DstBlock		      "dp Test Switch"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "From ds_on"
-      SrcPort		      1
-      Points		      [-45, 0]
-      DstBlock		      "ds Test Switch"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "dr_on"
+      SrcBlock		      "r.on"
       SrcPort		      1
       DstBlock		      "Goto dr_on"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "da_on"
+      SrcBlock		      "da.on"
       SrcPort		      1
       DstBlock		      "Goto da_on"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "dp_on"
+      SrcBlock		      "dp.on"
       SrcPort		      1
       DstBlock		      "Goto dp_on"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "ds_on"
+      SrcBlock		      "ds.on"
       SrcPort		      1
       DstBlock		      "Goto ds_on"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "From2"
+      SrcPort		      1
+      DstBlock		      "plant disturbance signal"
+      DstPort		      6
+    }
+    Line {
+      SrcBlock		      "Mux"
+      SrcPort		      1
+      DstBlock		      "in vs out scope"
       DstPort		      1
     }
     Line {
@@ -1943,34 +2172,6 @@ Model {
       DstPort		      4
     }
     Line {
-      SrcBlock		      "Ground"
-      SrcPort		      1
-      Points		      [0, -85]
-      DstBlock		      "dr Test Switch"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Ground1"
-      SrcPort		      1
-      Points		      [-50, 0]
-      DstBlock		      "ds Test Switch"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Ground2"
-      SrcPort		      1
-      Points		      [-45, 0]
-      DstBlock		      "da Test Switch"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Ground3"
-      SrcPort		      1
-      Points		      [-45, 0]
-      DstBlock		      "dp Test Switch"
-      DstPort		      3
-    }
-    Line {
       SrcBlock		      "Ground4"
       SrcPort		      1
       Points		      [-140, 0]
@@ -2024,12 +2225,26 @@ Model {
       }
     }
     Line {
-      Name		      "da"
-      Labels		      [0, 0]
-      SrcBlock		      "Actuator Disturbance"
+      SrcBlock		      "From r"
       SrcPort		      1
-      DstBlock		      "da Test Switch"
+      DstBlock		      "Actuator Gain1"
       DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Actuator Gain1"
+      SrcPort		      1
+      Points		      [15, 0; 0, 30]
+      DstBlock		      "Mux"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "From y"
+      SrcPort		      1
+      DstBlock		      "Mux"
+      DstPort		      2
+    }
+    Annotation {
+      Position		      [996, 891]
     }
   }
 }

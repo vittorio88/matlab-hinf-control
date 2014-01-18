@@ -11,7 +11,7 @@
 % For polynomial or null plant disturbance
 if dp.type == 0 || dp.type == 1
     W1.tf.value=Ws.tf.value;
-    W1.mod.value=W1.tf.value * s^sys.h/(s+.01)^sys.h; % Replace origin poles with poles close to origin
+    W1.mod.value=W1.tf.value * s^sys.h/(s+.01)^sys.h; % Replace origin poles with poles close to origin for simulink
     W1.mod.value=minreal(W1.mod.value);
 end
 
@@ -24,11 +24,12 @@ end
 [W1.tf.num,W1.tf.den]=tfdata(W1.tf.value,'v');
 [W1.mod.num,W1.mod.den]=tfdata(W1.mod.value,'v');
 
-
+W1.tf.zpk=zpk(W1.tf.value);
+W1.mod.zpk=zpk(W1.tf.value);
 %% GET W2 - AUTO (FAIL)
 
 % plot Wt, and plot Wu. Make higher curve equal to W2.
-% bode(Wt,Wu); % PICK HIGHER OF TWO CURVES
+% bode(Wt.tf.value,Wu.tf.value); % PICK HIGHER OF TWO CURVES
 
 % Automatic procedure (not useful because of unstable zeros)
 % % convenient when there is no clear winner between Wu and Wt
@@ -54,3 +55,5 @@ W2.mod.value=tf(1/T.design.p.value); % Same as Wt without zeros
 [ W2.tf.num W2.tf.den]=tfdata(W2.tf.value, 'v');
 [ W2.mod.num W2.mod.den]=tfdata(W2.mod.value, 'v');
 
+W2.tf.zpk=zpk(W2.tf.value);
+W2.mod.zpk=zpk(W2.tf.value);

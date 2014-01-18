@@ -268,3 +268,13 @@ disp('########')
 disp('draw system')
 disp('draw time performance')
 disp('draw error signal with error functions, and calculated errors vs simulated errors')
+
+disp('########')
+disp('missing stuff')
+disp('########')
+
+disp('draw TP and Sp')
+disp('write uncertainty model')
+disp('write Gpn and coeff values')
+disp('write W1 and W2')
+disp('write Gc and Gcmod and cancellations')

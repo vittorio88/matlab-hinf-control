@@ -5,27 +5,19 @@ function [ signalInputFunction ] = buildsignalinputfunction( coeff, type, freq, 
 %freq: freq of sinusoidal signals
 %type: 0 -> disabled, 1 -> polynomial, 2 -> sinusoidal
 %coeff: coefficient of polynomial or sinusoidal function
-% s=tf('s');
+s=tf('s');
 
 if type == 0
     signalInputFunction=0;
 end
 
 if type == 1
-    if h == 0
-        signalInputFunction = tf(coeff, 1);
-    end
-    if h == 1
-        signalInputFunction = tf(coeff, [1 0]);
-    end
-    if h == 2
-        signalInputFunction = tf(coeff, [1 0 0]);
-    end
+    signalInputFunction = coeff/s^(h+1);
 end
 
-timeVector= 0:0.001:1;
+% signal must be 1 for math to work for sinusoidal functions
 if type == 2
-    signalInputFunction=coeff*sin(freq*timeVector);
+    signalInputFunction=coeff;
 end
 
 

@@ -1,0 +1,6 @@
+#ifndef RTW_HEADER_input_signal_types_h_
+#define RTW_HEADER_input_signal_types_h_
+
+typedef struct RT_MODEL_input_signal RT_MODEL_input_signal;
+
+#endif

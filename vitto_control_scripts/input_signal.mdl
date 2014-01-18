@@ -1,33 +1,35 @@
 Model {
-  Name			  "plantM"
+  Name			  "input_signal"
   Version		  7.4
   MdlSubVersion		  0
   GraphicalInterface {
-    NumRootInports	    2
+    NumRootInports	    6
     Inport {
-      Name		      ""
+      Name		      "coeff"
     }
     Inport {
-      Name		      "u"
+      Name		      "order"
     }
-    NumRootOutports	    3
+    Inport {
+      Name		      "signal type (off, poly, or sine)"
+    }
+    Inport {
+      Name		      "sine frequency"
+    }
+    Inport {
+      Name		      "tf or gain"
+    }
+    Inport {
+      Name		      "on/off"
+    }
+    NumRootOutports	    1
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
-      Name		      "z1"
-    }
-    Outport {
-      BusObject		      ""
-      BusOutputAsStruct	      "off"
-      Name		      "z2"
-    }
-    Outport {
-      BusObject		      ""
-      BusOutputAsStruct	      "off"
-      Name		      "v"
+      Name		      "Out signal"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.18"
+    ComputedModelVersion    "1.17"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -40,22 +42,22 @@ Model {
   MinMaxOverflowLogging	  "UseLocalSettings"
   MinMaxOverflowArchiveMode "Overwrite"
   MaxMDLFileLineLength	  120
-  Created		  "Sun Jan 22 00:41:22 2012"
-  Creator		  "Mauricio"
+  Created		  "Sun Aug 25 16:12:38 2013"
+  Creator		  "Vittorio"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Vittorio"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Sep 04 13:01:26 2013"
-  RTWModifiedTimeStamp	  300200484
-  ModelVersionFormat	  "1.%<AutoIncrement:18>"
+  LastModifiedDate	  "Mon Sep 02 16:46:38 2013"
+  RTWModifiedTimeStamp	  300041196
+  ModelVersionFormat	  "1.%<AutoIncrement:17>"
   ConfigurationManager	  "None"
-  SampleTimeColors	  off
+  SampleTimeColors	  on
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "none"
   WideLines		  off
   ShowLineDimensions	  off
-  ShowPortDataTypes	  off
+  ShowPortDataTypes	  on
   ShowLoopsOnError	  on
   IgnoreBidirectionalLines off
   ShowStorageClass	  off
@@ -142,13 +144,13 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "auto"
+	  MaxStep		  "0.0001"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
 	  SolverMode		  "Auto"
-	  Solver		  "ode45"
-	  SolverName		  "ode45"
+	  Solver		  "VariableStepDiscrete"
+	  SolverName		  "VariableStepDiscrete"
 	  ShapePreserveControl	  "DisableAll"
 	  ZeroCrossControl	  "UseLocalSettings"
 	  ZeroCrossAlgorithm	  "Nonadaptive"
@@ -553,8 +555,8 @@ Model {
 	PropName		"Components"
       }
       Name		      "Configuration"
-      CurrentDlgPage	      "Data Import//Export"
-      ConfigPrmDlgPosition    " [ 243, 69, 1123, 699 ] "
+      CurrentDlgPage	      "Solver"
+      ConfigPrmDlgPosition    " [ 360, 135, 1240, 765 ] "
     }
     PropName		    "ConfigurationSets"
   }
@@ -595,26 +597,41 @@ Model {
   }
   BlockParameterDefaults {
     Block {
-      BlockType		      Gain
-      Gain		      "1"
-      Multiplication	      "Element-wise(K.*u)"
-      ParamMin		      "[]"
-      ParamMax		      "[]"
-      ParameterDataTypeMode   "Same as input"
-      ParameterDataType	      "fixdt(1,16,0)"
-      ParameterScalingMode    "Best Precision: Matrix-wise"
-      ParameterScaling	      "[]"
-      ParamDataTypeStr	      "Inherit: Same as input"
+      BlockType		      Clock
+      DisplayTime	      off
+    }
+    Block {
+      BlockType		      Constant
+      Value		      "1"
+      VectorParams1D	      on
+      SamplingMode	      "Sample based"
       OutMin		      "[]"
       OutMax		      "[]"
-      OutDataTypeMode	      "Same as input"
+      OutDataTypeMode	      "Inherit from 'Constant value'"
+      OutDataType	      "fixdt(1,16,0)"
+      ConRadixGroup	      "Use specified scaling"
+      OutScaling	      "[]"
+      OutDataTypeStr	      "Inherit: Inherit from 'Constant value'"
+      LockScale		      off
+      SampleTime	      "inf"
+      FramePeriod	      "inf"
+    }
+    Block {
+      BlockType		      DotProduct
+      SampleTime	      "-1"
+      InputSameDT	      on
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutputDataTypeScalingMode	"Same as first input"
       OutDataType	      "fixdt(1,16,0)"
       OutScaling	      "[]"
-      OutDataTypeStr	      "Inherit: Same as input"
+      OutDataTypeStr	      "Inherit: Same as first input"
       LockScale		      off
       RndMeth		      "Floor"
-      SaturateOnIntegerOverflow	on
-      SampleTime	      "-1"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Ground
     }
     Block {
       BlockType		      Inport
@@ -639,6 +656,23 @@ Model {
       Interpolate	      on
     }
     Block {
+      BlockType		      MultiPortSwitch
+      Inputs		      "3"
+      zeroidx		      off
+      InputSameDT	      on
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      SampleTime	      "-1"
+      AllowDiffInputSizes     off
+    }
+    Block {
       BlockType		      Outport
       Port		      "1"
       UseBusObject	      off
@@ -661,331 +695,337 @@ Model {
       InitialOutput	      "[]"
     }
     Block {
-      BlockType		      Sum
-      IconShape		      "rectangular"
-      Inputs		      "++"
-      CollapseMode	      "All dimensions"
-      CollapseDim	      "1"
+      BlockType		      Switch
+      Criteria		      "u2 >= Threshold"
+      Threshold		      "0"
       InputSameDT	      on
-      AccumDataTypeStr	      "Inherit: Inherit via internal rule"
       OutMin		      "[]"
       OutMax		      "[]"
-      OutDataTypeMode	      "Same as first input"
+      OutDataTypeMode	      "Inherit via internal rule"
       OutDataType	      "fixdt(1,16,0)"
       OutScaling	      "[]"
-      OutDataTypeStr	      "Inherit: Same as first input"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
       LockScale		      off
       RndMeth		      "Floor"
       SaturateOnIntegerOverflow	on
+      ZeroCross		      on
       SampleTime	      "-1"
+      AllowDiffInputSizes     off
     }
     Block {
-      BlockType		      TransferFcn
-      Numerator		      "[1]"
-      Denominator	      "[1 2 1]"
-      AbsoluteTolerance	      "auto"
-      ContinuousStateAttributes	"''"
-      Realization	      "auto"
+      BlockType		      Trigonometry
+      Operator		      "sin"
+      OutputSignalType	      "auto"
+      SampleTime	      "-1"
     }
   }
   System {
-    Name		    "plantM"
-    Location		    [2, 82, 1582, 847]
+    Name		    "input_signal"
+    Location		    [646, 141, 1456, 625]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
     ScreenColor		    "white"
     PaperOrientation	    "landscape"
     PaperPositionMode	    "auto"
-    PaperType		    "A4"
-    PaperUnits		    "centimeters"
-    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+    PaperType		    "usletter"
+    PaperUnits		    "inches"
+    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    32
+    SIDHighWatermark	    33
     Block {
       BlockType		      Inport
-      Name		      "w1"
-      SID		      18
-      Position		      [125, 228, 155, 242]
-      ShowName		      off
+      Name		      "coeff"
+      SID		      9
+      Position		      [475, 173, 505, 187]
+      NamePlacement	      "alternate"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
     }
     Block {
       BlockType		      Inport
-      Name		      "u"
-      SID		      19
-      Position		      [125, 348, 155, 362]
+      Name		      "order"
+      SID		      10
+      Position		      [185, 138, 215, 152]
       Port		      "2"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
     }
     Block {
-      BlockType		      Gain
-      Name		      "Gain"
-      SID		      27
-      Position		      [415, 215, 455, 255]
-      Gain		      "Ga"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParameterDataType	      "fixdt(1, 16)"
-      ParameterScaling	      "2^0"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Gain
-      Name		      "Gain1"
-      SID		      28
-      Position		      [560, 300, 600, 340]
-      BlockMirror	      on
-      Gain		      "Gs"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParameterDataType	      "fixdt(1, 16)"
-      ParameterScaling	      "2^0"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Gain
-      Name		      "Gain2"
-      SID		      29
-      Position		      [415, 300, 455, 340]
-      BlockMirror	      on
-      Gain		      "Gf"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParameterDataType	      "fixdt(1, 16)"
-      ParameterScaling	      "2^0"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Gain
-      Name		      "Gain3"
-      SID		      30
-      Position		      [710, 212, 755, 258]
-      Gain		      "1/Kd"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParameterDataType	      "fixdt(1, 16)"
-      ParameterScaling	      "2^0"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Gain
-      Name		      "Gain4"
-      SID		      31
-      Position		      [710, 127, 755, 173]
-      Gain		      "1/Gr"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParameterDataType	      "fixdt(1, 16)"
-      ParameterScaling	      "2^0"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Gain
-      Name		      "Gain5"
-      SID		      32
-      Position		      [180, 212, 225, 258]
-      Gain		      "Gr"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParameterDataType	      "fixdt(1, 16)"
-      ParameterScaling	      "2^0"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      TransferFcn
-      Name		      "Gp"
-      SID		      20
-      Position		      [540, 202, 645, 268]
-      Numerator		      "Gp.nominal.numerator"
-      Denominator	      "Gp.nominal.denominator"
-    }
-    Block {
-      BlockType		      Sum
-      Name		      "Sum"
-      SID		      21
-      Ports		      [2, 1]
-      Position		      [255, 225, 275, 245]
-      ShowName		      off
-      IconShape		      "round"
-      Inputs		      "|+-"
-      InputSameDT	      off
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      TransferFcn
-      Name		      "W1mod"
-      SID		      22
-      Position		      [790, 131, 875, 169]
-      Numerator		      "W1.mod.num"
-      Denominator	      "W1.mod.den"
-    }
-    Block {
-      BlockType		      TransferFcn
-      Name		      "W2mod"
-      SID		      23
-      Position		      [790, 216, 875, 254]
-      Numerator		      "W2.mod.num"
-      Denominator	      "W2.mod.den"
-    }
-    Block {
-      BlockType		      Outport
-      Name		      "z1"
-      SID		      24
-      Position		      [935, 143, 965, 157]
-      IconDisplay	      "Port number"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Outport
-      Name		      "z2"
-      SID		      25
-      Position		      [935, 228, 965, 242]
-      Port		      "2"
-      IconDisplay	      "Port number"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Outport
-      Name		      "v"
-      SID		      26
-      Position		      [935, 368, 965, 382]
+      BlockType		      Inport
+      Name		      "signal type (off, poly, or sine)"
+      SID		      11
+      Position		      [185, 48, 215, 62]
       Port		      "3"
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
     }
-    Line {
-      SrcBlock		      "Gp"
-      SrcPort		      1
-      Points		      [15, 0]
-      Branch {
-	Points			[0, 85]
-	DstBlock		"Gain1"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"Gain3"
-	DstPort			1
-      }
+    Block {
+      BlockType		      Inport
+      Name		      "sine frequency"
+      SID		      19
+      Position		      [185, 293, 215, 307]
+      NamePlacement	      "alternate"
+      Port		      "4"
+      IconDisplay	      "Port number"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Inport
+      Name		      "tf or gain"
+      SID		      32
+      Position		      [185, 358, 215, 372]
+      Port		      "5"
+      IconDisplay	      "Port number"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Inport
+      Name		      "on/off"
+      SID		      12
+      Position		      [185, 423, 215, 437]
+      Port		      "6"
+      IconDisplay	      "Port number"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant"
+      SID		      27
+      Position		      [185, 190, 215, 220]
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Ground
+      Name		      "Ground"
+      SID		      3
+      Position		      [445, 495, 465, 515]
+      BlockRotation	      270
+      NamePlacement	      "alternate"
+    }
+    Block {
+      BlockType		      Ground
+      Name		      "Ground1"
+      SID		      30
+      Position		      [330, 100, 350, 120]
+      BlockRotation	      270
+      BlockMirror	      on
+      NamePlacement	      "alternate"
+    }
+    Block {
+      BlockType		      MultiPortSwitch
+      Name		      "Input Type Switch1"
+      SID		      28
+      Ports		      [4, 1]
+      Position		      [380, 117, 410, 163]
+      zeroidx		      on
+      InputSameDT	      off
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Switch
+      Name		      "On/Off Switch"
+      SID		      8
+      Position		      [755, 415, 785, 445]
+      Threshold		      "1"
+      InputSameDT	      off
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Switch
+      Name		      "Step or Ramp"
+      SID		      21
+      Position		      [255, 130, 285, 160]
+      Criteria		      "u2 ~= 0"
+      Threshold		      "1"
+      InputSameDT	      off
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Clock
+      Name		      "clock"
+      SID		      25
+      Position		      [50, 195, 70, 215]
+      Decimation	      "10"
+    }
+    Block {
+      BlockType		      DotProduct
+      Name		      "signal input coefficient"
+      SID		      26
+      Position		      [565, 172, 595, 203]
+      NamePlacement	      "alternate"
+      OutputDataTypeScalingMode	"Inherit via internal rule"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^-10"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+    }
+    Block {
+      BlockType		      DotProduct
+      Name		      "signal input tf"
+      SID		      33
+      Position		      [645, 182, 675, 213]
+      NamePlacement	      "alternate"
+      OutputDataTypeScalingMode	"Inherit via internal rule"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^-10"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+    }
+    Block {
+      BlockType		      Trigonometry
+      Name		      "sin"
+      SID		      15
+      Ports		      [1, 1]
+      Position		      [295, 295, 325, 325]
+    }
+    Block {
+      BlockType		      DotProduct
+      Name		      "sine angle"
+      SID		      20
+      Position		      [245, 292, 275, 323]
+      OutputDataTypeScalingMode	"Inherit via internal rule"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^-10"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out signal"
+      SID		      13
+      Position		      [835, 423, 865, 437]
+      IconDisplay	      "Port number"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
     }
     Line {
-      SrcBlock		      "W1mod"
+      SrcBlock		      "Ground"
       SrcPort		      1
-      DstBlock		      "z1"
-      DstPort		      1
+      Points		      [0, -50]
+      DstBlock		      "On/Off Switch"
+      DstPort		      3
     }
     Line {
-      SrcBlock		      "W2mod"
+      SrcBlock		      "on/off"
       SrcPort		      1
-      DstBlock		      "z2"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "u"
-      SrcPort		      1
-      Points		      [195, 0; 0, -120]
-      DstBlock		      "Gain"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "w1"
-      SrcPort		      1
-      DstBlock		      "Gain5"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Sum"
-      SrcPort		      1
-      Points		      [25, 0]
-      Branch {
-	Points			[0, 140]
-	DstBlock		"v"
-	DstPort			1
-      }
-      Branch {
-	Points			[0, -85]
-	DstBlock		"Gain4"
-	DstPort			1
-      }
-    }
-    Line {
-      SrcBlock		      "Gain"
-      SrcPort		      1
-      DstBlock		      "Gp"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Gain2"
-      SrcPort		      1
-      Points		      [-145, 0]
-      DstBlock		      "Sum"
+      DstBlock		      "On/Off Switch"
       DstPort		      2
     }
     Line {
-      SrcBlock		      "Gain1"
+      SrcBlock		      "On/Off Switch"
       SrcPort		      1
-      DstBlock		      "Gain2"
+      DstBlock		      "Out signal"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Gain3"
+      SrcBlock		      "sine angle"
       SrcPort		      1
-      DstBlock		      "W2mod"
+      DstBlock		      "sin"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Gain4"
+      SrcBlock		      "sine frequency"
       SrcPort		      1
-      DstBlock		      "W1mod"
+      DstBlock		      "sine angle"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Gain5"
+      SrcBlock		      "sin"
       SrcPort		      1
-      DstBlock		      "Sum"
+      Points		      [0, -155]
+      DstBlock		      "Input Type Switch1"
+      DstPort		      4
+    }
+    Line {
+      SrcBlock		      "order"
+      SrcPort		      1
+      DstBlock		      "Step or Ramp"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "coeff"
+      SrcPort		      1
+      DstBlock		      "signal input coefficient"
       DstPort		      1
     }
-    Annotation {
-      Name		      "w"
-      Position		      [142, 246]
+    Line {
+      SrcBlock		      "Input Type Switch1"
+      SrcPort		      1
+      Points		      [10, 0; 0, 55]
+      DstBlock		      "signal input coefficient"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "signal type (off, poly, or sine)"
+      SrcPort		      1
+      Points		      [145, 0]
+      DstBlock		      "Input Type Switch1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Ground1"
+      SrcPort		      1
+      Points		      [0, 10]
+      DstBlock		      "Input Type Switch1"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Step or Ramp"
+      SrcPort		      1
+      DstBlock		      "Input Type Switch1"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "signal input coefficient"
+      SrcPort		      1
+      DstBlock		      "signal input tf"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "tf or gain"
+      SrcPort		      1
+      Points		      [205, 0; 0, -160]
+      DstBlock		      "signal input tf"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "signal input tf"
+      SrcPort		      1
+      Points		      [30, 0; 0, 220]
+      DstBlock		      "On/Off Switch"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "clock"
+      SrcPort		      1
+      Points		      [55, 0]
+      Branch {
+	Points			[0, 110]
+	DstBlock		"sine angle"
+	DstPort			2
+      }
+      Branch {
+	Points			[0, -70]
+	DstBlock		"Step or Ramp"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Constant"
+      SrcPort		      1
+      Points		      [10, 0; 0, -50]
+      DstBlock		      "Step or Ramp"
+      DstPort		      3
     }
   }
 }

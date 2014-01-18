@@ -1,25 +1,13 @@
 Model {
-  Name			  "system_model_user_friendly"
+  Name			  "system_model"
   Version		  7.4
   MdlSubVersion		  0
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.138"
-    NumModelReferences	    4
-    ModelReference {
-      ModelRefBlockPath	      "system_model_user_friendly/actuator disturbance signal|input_signal"
-    }
-    ModelReference {
-      ModelRefBlockPath	      "system_model_user_friendly/plant disturbance signal|input_signal"
-    }
-    ModelReference {
-      ModelRefBlockPath	      "system_model_user_friendly/reference signal|input_signal"
-    }
-    ModelReference {
-      ModelRefBlockPath	      "system_model_user_friendly/sensor disturbance signal|input_signal"
-    }
+    ComputedModelVersion    "1.70"
+    NumModelReferences	    0
     NumTestPointedSignals   0
   }
   SavedCharacterEncoding  "windows-1252"
@@ -37,9 +25,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Vittorio"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Sep 04 12:21:01 2013"
-  RTWModifiedTimeStamp	  300197771
-  ModelVersionFormat	  "1.%<AutoIncrement:138>"
+  LastModifiedDate	  "Tue Jan 29 01:33:40 2013"
+  RTWModifiedTimeStamp	  281323510
+  ModelVersionFormat	  "1.%<AutoIncrement:70>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -122,9 +110,9 @@ Model {
 	  $ObjectID		  2
 	  Version		  "1.6.0"
 	  StartTime		  "0.0"
-	  StopTime		  "100"
+	  StopTime		  "1"
 	  AbsTol		  "auto"
-	  FixedStep		  ".00001"
+	  FixedStep		  "auto"
 	  InitialStep		  "auto"
 	  MaxNumMinSteps	  "-1"
 	  MaxOrder		  5
@@ -133,13 +121,13 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "0.001"
+	  MaxStep		  "auto"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
 	  SolverMode		  "Auto"
-	  Solver		  "ode15s"
-	  SolverName		  "ode15s"
+	  Solver		  "ode45"
+	  SolverName		  "ode45"
 	  ShapePreserveControl	  "DisableAll"
 	  ZeroCrossControl	  "UseLocalSettings"
 	  ZeroCrossAlgorithm	  "Nonadaptive"
@@ -154,17 +142,17 @@ Model {
 	  $ObjectID		  3
 	  Version		  "1.6.0"
 	  Decimation		  "1"
-	  ExternalInput		  "[t,u]"
+	  ExternalInput		  "[t, u]"
 	  FinalStateName	  "xFinal"
 	  InitialState		  "xInitial"
-	  LimitDataPoints	  off
+	  LimitDataPoints	  on
 	  MaxDataPoints		  "1000"
 	  LoadExternalInput	  off
 	  LoadInitialState	  off
 	  SaveFinalState	  off
 	  SaveCompleteFinalSimState off
 	  SaveFormat		  "Array"
-	  SaveOutput		  off
+	  SaveOutput		  on
 	  SaveState		  off
 	  SignalLogging		  on
 	  InspectSignalLogs	  off
@@ -549,7 +537,7 @@ Model {
       }
       Name		      "Configuration"
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    " [ 236, 132, 1176, 682 ] "
+      ConfigPrmDlgPosition    " [ 224, 40, 1036, 590 ] "
     }
     PropName		    "ConfigurationSets"
   }
@@ -606,11 +594,6 @@ Model {
       FramePeriod	      "inf"
     }
     Block {
-      BlockType		      From
-      IconDisplay	      "Tag"
-      TagVisibility	      "local"
-    }
-    Block {
       BlockType		      Gain
       Gain		      "1"
       Multiplication	      "Element-wise(K.*u)"
@@ -631,17 +614,6 @@ Model {
       RndMeth		      "Floor"
       SaturateOnIntegerOverflow	on
       SampleTime	      "-1"
-    }
-    Block {
-      BlockType		      Goto
-      IconDisplay	      "Tag"
-    }
-    Block {
-      BlockType		      ModelReference
-      Variant		      off
-      GeneratePreprocessorConditionals off
-      CopyOfModelProtected    off
-      DefaultDataLogging      off
     }
     Block {
       BlockType		      Mux
@@ -669,6 +641,22 @@ Model {
       SampleTime	      "-1"
     }
     Block {
+      BlockType		      Sin
+      SineType		      "Time based"
+      TimeSource	      "Use simulation time"
+      SampleTime	      "-1"
+      VectorParams1D	      on
+    }
+    Block {
+      BlockType		      Step
+      Time		      "1"
+      Before		      "0"
+      After		      "1"
+      SampleTime	      "-1"
+      VectorParams1D	      on
+      ZeroCross		      on
+    }
+    Block {
       BlockType		      Sum
       IconShape		      "rectangular"
       Inputs		      "++"
@@ -687,13 +675,31 @@ Model {
       SaturateOnIntegerOverflow	on
       SampleTime	      "-1"
     }
+    Block {
+      BlockType		      Switch
+      Criteria		      "u2 >= Threshold"
+      Threshold		      "0"
+      InputSameDT	      on
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      ZeroCross		      on
+      SampleTime	      "-1"
+      AllowDiffInputSizes     off
+    }
   }
   System {
-    Name		    "system_model_user_friendly"
-    Location		    [2, 74, 1581, 839]
+    Name		    "system_model"
+    Location		    [810, 82, 1590, 814]
     Open		    on
     ModelBrowserVisibility  off
-    ModelBrowserWidth	    212
+    ModelBrowserWidth	    200
     ScreenColor		    "white"
     PaperOrientation	    "landscape"
     PaperPositionMode	    "auto"
@@ -704,12 +710,22 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    178
+    SIDHighWatermark	    43
+    Block {
+      BlockType		      Constant
+      Name		      "Actuator Disturbance"
+      SID		      21
+      Position		      [702, 225, 768, 255]
+      BlockRotation	      270
+      BlockMirror	      on
+      NamePlacement	      "alternate"
+      Value		      "da_coeff"
+    }
     Block {
       BlockType		      Gain
       Name		      "Actuator Gain"
-      SID		      92
-      Position		      [1080, 625, 1110, 655]
+      SID		      10
+      Position		      [650, 280, 680, 310]
       Gain		      "Ga"
       ParameterDataTypeMode   "Inherit via internal rule"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
@@ -718,255 +734,11 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      Gain
-      Name		      "Actuator Gain1"
-      SID		      173
-      Position		      [930, 145, 960, 175]
-      Gain		      "Kd"
-      ParameterDataTypeMode   "Inherit via internal rule"
-      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
-      OutDataTypeMode	      "Inherit via internal rule"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      SaturateOnIntegerOverflow	off
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant"
-      SID		      93
-      Position		      [420, 333, 485, 347]
-      NamePlacement	      "alternate"
-      Value		      "dp.coefficient"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant1"
-      SID		      94
-      Position		      [350, 348, 415, 362]
-      NamePlacement	      "alternate"
-      Value		      "dp.order"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant10"
-      SID		      95
-      Position		      [105, 522, 130, 538]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant11"
-      SID		      169
-      Position		      [70, 537, 95, 553]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant12"
-      SID		      96
-      Position		      [420, 593, 485, 607]
-      NamePlacement	      "alternate"
-      Value		      "r.coefficient"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant13"
-      SID		      97
-      Position		      [350, 608, 415, 622]
-      NamePlacement	      "alternate"
-      Value		      "r.order"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant14"
-      SID		      98
-      Position		      [275, 623, 340, 637]
-      NamePlacement	      "alternate"
-      Value		      "r.type"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant15"
-      SID		      99
-      Position		      [205, 638, 270, 652]
-      NamePlacement	      "alternate"
-      Value		      "r.frequency"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant16"
-      SID		      100
-      Position		      [110, 652, 135, 668]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant17"
-      SID		      170
-      Position		      [70, 667, 95, 683]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant18"
-      SID		      101
-      Position		      [420, 783, 485, 797]
-      NamePlacement	      "alternate"
-      Value		      "ds.coefficient"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant19"
-      SID		      102
-      Position		      [350, 798, 415, 812]
-      NamePlacement	      "alternate"
-      Value		      "ds.order"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant2"
-      SID		      103
-      Position		      [275, 363, 340, 377]
-      NamePlacement	      "alternate"
-      Value		      "dp.type"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant20"
-      SID		      104
-      Position		      [275, 813, 340, 827]
-      NamePlacement	      "alternate"
-      Value		      "ds.type"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant21"
-      SID		      105
-      Position		      [205, 828, 270, 842]
-      NamePlacement	      "alternate"
-      Value		      "ds.frequency"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant22"
-      SID		      106
-      Position		      [105, 842, 130, 858]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant23"
-      SID		      171
-      Position		      [70, 857, 95, 873]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant3"
-      SID		      107
-      Position		      [205, 378, 270, 392]
-      NamePlacement	      "alternate"
-      Value		      "dp.frequency"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant4"
-      SID		      108
-      Position		      [105, 392, 130, 408]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant5"
-      SID		      168
-      Position		      [70, 407, 95, 423]
-      NamePlacement	      "alternate"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant6"
-      SID		      109
-      Position		      [420, 463, 485, 477]
-      NamePlacement	      "alternate"
-      Value		      "da.coefficient"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant7"
-      SID		      110
-      Position		      [350, 478, 415, 492]
-      NamePlacement	      "alternate"
-      Value		      "da.order"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant8"
-      SID		      111
-      Position		      [275, 493, 340, 507]
-      NamePlacement	      "alternate"
-      Value		      "da.type"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
-      BlockType		      Constant
-      Name		      "Constant9"
-      SID		      112
-      Position		      [205, 508, 270, 522]
-      NamePlacement	      "alternate"
-      Value		      "da.frequency"
-      OutDataType	      "fixdt(1, 16)"
-      OutScaling	      "2^0"
-    }
-    Block {
       BlockType		      Reference
       Name		      "Controller"
-      SID		      113
+      SID		      1
       Ports		      [1, 1]
-      Position		      [925, 622, 1020, 658]
+      Position		      [495, 277, 590, 313]
       LibraryVersion	      "1.107"
       SourceBlock	      "cstblocks/LTI System"
       SourceType	      "LTI Block"
@@ -978,15 +750,26 @@ Model {
       RTWMemSecDataConstants  "Inherit from model"
       RTWMemSecDataInternal   "Inherit from model"
       RTWMemSecDataParameters "Inherit from model"
-      sys		      "Gc.mod.value"
+      sys		      "Gc_mod"
       IC		      "[]"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Dist. Type"
+      SID		      38
+      Position		      [939, 80, 1001, 105]
+      BlockRotation	      270
+      BlockMirror	      on
+      NamePlacement	      "alternate"
+      Value		      "dp_type"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
     }
     Block {
       BlockType		      Gain
       Name		      "Feed-forward Gain"
-      SID		      115
-      Position		      [955, 760, 985, 790]
-      BlockRotation	      359
+      SID		      13
+      Position		      [525, 415, 555, 445]
       BlockMirror	      on
       NamePlacement	      "alternate"
       Gain		      "Gf"
@@ -997,67 +780,55 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      From
-      Name		      "From r"
-      SID		      174
-      Position		      [855, 146, 895, 174]
-      NamePlacement	      "alternate"
-      GotoTag		      "r"
+      BlockType		      Gain
+      Name		      "Gain1"
+      SID		      11
+      Position		      [325, 280, 355, 310]
+      Gain		      "Gr"
+      ParameterDataTypeMode   "Inherit via internal rule"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      From
-      Name		      "From y"
-      SID		      175
-      Position		      [875, 196, 915, 224]
-      NamePlacement	      "alternate"
-      GotoTag		      "y"
+      BlockType		      Scope
+      Name		      "Gry Scope"
+      SID		      43
+      Ports		      [1]
+      Position		      [1145, 519, 1175, 551]
+      Floating		      off
+      Location		      [785, 56, 1569, 852]
+      Open		      off
+      NumInputPorts	      "1"
+      List {
+	ListType		AxesTitles
+	axes1			"%<SignalLabel>"
+      }
+      TimeRange		      "0.5             "
+      YMin		      "0"
+      YMax		      "2.5"
+      SaveName		      "ScopeData1"
+      DataFormat	      "StructureWithTime"
+      LimitDataPoints	      off
+      SampleInput	      on
+      SampleTime	      "0"
     }
     Block {
-      BlockType		      Goto
-      Name		      "Goto da"
-      SID		      131
-      Position		      [1235, 495, 1275, 525]
-      GotoTag		      "da"
-      TagVisibility	      "local"
-    }
-    Block {
-      BlockType		      Goto
-      Name		      "Goto da1"
-      SID		      132
-      Position		      [840, 575, 880, 605]
-      GotoTag		      "r"
-      TagVisibility	      "local"
-    }
-    Block {
-      BlockType		      Goto
-      Name		      "Goto dp"
-      SID		      134
-      Position		      [1485, 365, 1525, 395]
-      GotoTag		      "dp"
-      TagVisibility	      "local"
-    }
-    Block {
-      BlockType		      Goto
-      Name		      "Goto ds"
-      SID		      137
-      Position		      [1250, 815, 1290, 845]
-      GotoTag		      "ds"
-      TagVisibility	      "local"
-    }
-    Block {
-      BlockType		      Goto
-      Name		      "Goto y"
-      SID		      139
-      Position		      [1485, 625, 1525, 655]
-      GotoTag		      "y"
-      TagVisibility	      "local"
+      BlockType		      Constant
+      Name		      "Input Order"
+      SID		      32
+      Position		      [135, 280, 165, 310]
+      Value		      "dr_h"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
     }
     Block {
       BlockType		      Mux
       Name		      "Mux"
-      SID		      176
+      SID		      23
       Ports		      [2, 1]
-      Position		      [1010, 181, 1015, 219]
+      Position		      [1080, 421, 1085, 459]
       ShowName		      off
       Inputs		      "2"
       DisplayOption	      "bar"
@@ -1065,9 +836,9 @@ Model {
     Block {
       BlockType		      Reference
       Name		      "Nominal Plant"
-      SID		      145
+      SID		      4
       Ports		      [1, 1]
-      Position		      [1235, 622, 1330, 658]
+      Position		      [805, 277, 900, 313]
       LibraryVersion	      "1.107"
       SourceBlock	      "cstblocks/LTI System"
       SourceType	      "LTI Block"
@@ -1079,14 +850,90 @@ Model {
       RTWMemSecDataConstants  "Inherit from model"
       RTWMemSecDataInternal   "Inherit from model"
       RTWMemSecDataParameters "Inherit from model"
-      sys		      "Gp.nominal.tf"
+      sys		      "Gp_nominal"
       IC		      "[]"
     }
     Block {
       BlockType		      Gain
+      Name		      "Plant Disturbance Gain"
+      SID		      18
+      Position		      [955, 225, 985, 255]
+      BlockRotation	      270
+      BlockMirror	      on
+      Gain		      "Gd"
+      ParameterDataTypeMode   "Inherit via internal rule"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Plant Polynomial Disturbance"
+      SID		      24
+      Position		      [1027, 80, 1093, 110]
+      BlockRotation	      270
+      BlockMirror	      on
+      Value		      "dp_coeff"
+    }
+    Block {
+      BlockType		      Sin
+      Name		      "Plant Sinusoidal Disturbance"
+      SID		      20
+      Ports		      [0, 1]
+      Position		      [825, 80, 855, 110]
+      BlockRotation	      270
+      BlockMirror	      on
+      NamePlacement	      "alternate"
+      Amplitude		      "dp_coeff"
+      Bias		      "0"
+      Frequency		      "dp_freq"
+      Phase		      "0"
+      Samples		      "10"
+      Offset		      "0"
+      SampleTime	      "0"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Ramp"
+      SID		      22
+      Ports		      [0, 1]
+      Position		      [135, 225, 165, 255]
+      LibraryVersion	      "1.762"
+      SourceBlock	      "simulink/Sources/Ramp"
+      SourceType	      "Ramp"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      FunctionWithSeparateData off
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      slope		      "dr_coeff"
+      start		      "0"
+      X0		      "0"
+      VectorParams1D	      on
+    }
+    Block {
+      BlockType		      Sin
+      Name		      "Sensor Disturbance"
+      SID		      19
+      Ports		      [0, 1]
+      Position		      [685, 480, 715, 510]
+      Amplitude		      "ds_coeff"
+      Bias		      "0"
+      Frequency		      "ds_freq"
+      Phase		      "0"
+      Samples		      "10"
+      Offset		      "0"
+      SampleTime	      "0"
+    }
+    Block {
+      BlockType		      Gain
       Name		      "Sensor Gain"
-      SID		      146
-      Position		      [1265, 760, 1295, 790]
+      SID		      12
+      Position		      [835, 415, 865, 445]
       BlockMirror	      on
       Gain		      "Gs"
       ParameterDataTypeMode   "Inherit via internal rule"
@@ -1096,11 +943,20 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
+      BlockType		      Step
+      Name		      "Step"
+      SID		      9
+      Position		      [135, 335, 165, 365]
+      Time		      "0"
+      After		      "dr_coeff"
+      SampleTime	      "0"
+    }
+    Block {
       BlockType		      Sum
       Name		      "Sum"
-      SID		      147
+      SID		      14
       Ports		      [2, 1]
-      Position		      [1390, 630, 1410, 650]
+      Position		      [960, 285, 980, 305]
       ShowName		      off
       IconShape		      "round"
       Inputs		      "++|"
@@ -1118,9 +974,9 @@ Model {
     Block {
       BlockType		      Sum
       Name		      "Sum1"
-      SID		      148
+      SID		      15
       Ports		      [2, 1]
-      Position		      [1155, 765, 1175, 785]
+      Position		      [725, 420, 745, 440]
       BlockMirror	      on
       NamePlacement	      "alternate"
       ShowName		      off
@@ -1134,9 +990,9 @@ Model {
     Block {
       BlockType		      Sum
       Name		      "Sum2"
-      SID		      150
+      SID		      16
       Ports		      [2, 1]
-      Position		      [835, 630, 855, 650]
+      Position		      [405, 285, 425, 305]
       ShowName		      off
       IconShape		      "round"
       Inputs		      "|+-"
@@ -1148,9 +1004,9 @@ Model {
     Block {
       BlockType		      Sum
       Name		      "Sum3"
-      SID		      151
+      SID		      17
       Ports		      [2, 1]
-      Position		      [1150, 625, 1180, 655]
+      Position		      [720, 280, 750, 310]
       NamePlacement	      "alternate"
       ShowName		      off
       IconShape		      "round"
@@ -1161,41 +1017,52 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      ModelReference
-      Name		      "actuator disturbance signal"
-      SID		      153
-      Ports		      [6, 1]
-      Position		      [510, 460, 725, 555]
-      ModelNameDialog	      "input_signal"
-      SimulationMode	      "Accelerator"
-      ModelReferenceVersion   "1.17"
-      List {
-	ListType		InputPortNames
-	port0			"coeff"
-	port1			"order"
-	port2			"signal type (off, poly, or sine)"
-	port3			"sine frequency"
-	port4			"tf or gain"
-	port5			"on/off"
-      }
-      List {
-	ListType		OutputPortNames
-	port0			"Out signal"
-      }
-      List {
-	ListType		OutputPortOutputBusAsStructs
-	port0			"off"
-      }
-      CopyOfModelName	      "input_signal"
+      BlockType		      Sum
+      Name		      "Sum4"
+      SID		      42
+      Ports		      [2, 1]
+      Position		      [1070, 525, 1090, 545]
+      ShowName		      off
+      IconShape		      "round"
+      Inputs		      "+-|"
+      InputSameDT	      off
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Switch
+      Name		      "Switch"
+      SID		      26
+      Position		      [255, 280, 285, 310]
+      Threshold		      "1"
+      InputSameDT	      off
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Switch
+      Name		      "Switch1"
+      SID		      30
+      Position		      [955, 170, 985, 200]
+      BlockRotation	      270
+      BlockMirror	      on
+      NamePlacement	      "alternate"
+      Threshold		      "2"
+      InputSameDT	      off
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+      SaturateOnIntegerOverflow	off
     }
     Block {
       BlockType		      Scope
-      Name		      "error scope"
-      SID		      159
+      Name		      "in vs out scope"
+      SID		      8
       Ports		      [1]
-      Position		      [1490, 189, 1520, 221]
+      Position		      [1125, 424, 1155, 456]
       Floating		      off
-      Location		      [477, 66, 1261, 862]
+      Location		      [809, 55, 1593, 851]
       Open		      on
       NumInputPorts	      "1"
       List {
@@ -1203,248 +1070,33 @@ Model {
 	axes1			"%<SignalLabel>"
       }
       TimeRange		      "0.5             "
-      YMin		      "7.9422"
-      YMax		      "7.9438"
-      SaveName		      "ScopeData2"
+      YMin		      "0"
+      YMax		      "2.5"
       DataFormat	      "StructureWithTime"
       LimitDataPoints	      off
       SampleInput	      on
       SampleTime	      "0"
-    }
-    Block {
-      BlockType		      Scope
-      Name		      "error scope1"
-      SID		      178
-      Ports		      [1]
-      Position		      [1280, 269, 1310, 301]
-      Floating		      off
-      Location		      [477, 66, 1261, 862]
-      Open		      off
-      NumInputPorts	      "1"
-      List {
-	ListType		AxesTitles
-	axes1			"%<SignalLabel>"
-      }
-      TimeRange		      "0.5             "
-      YMin		      "0.055"
-      YMax		      "0.0635"
-      SaveName		      "ScopeData1"
-      DataFormat	      "StructureWithTime"
-      LimitDataPoints	      off
-      SampleInput	      on
-      SampleTime	      "0"
-    }
-    Block {
-      BlockType		      Scope
-      Name		      "in vs out scope"
-      SID		      177
-      Ports		      [1]
-      Position		      [1060, 184, 1090, 216]
-      Floating		      off
-      Location		      [445, 61, 1229, 857]
-      Open		      off
-      NumInputPorts	      "1"
-      List {
-	ListType		AxesTitles
-	axes1			"%<SignalLabel>"
-      }
-      TimeRange		      "0.5             "
-      YMin		      "7.45"
-      YMax		      "8.3"
-      DataFormat	      "StructureWithTime"
-      LimitDataPoints	      off
-      SampleInput	      on
-      SampleTime	      "0"
-    }
-    Block {
-      BlockType		      ModelReference
-      Name		      "plant disturbance signal"
-      SID		      160
-      Ports		      [6, 1]
-      Position		      [510, 329, 725, 426]
-      ModelNameDialog	      "input_signal"
-      SimulationMode	      "Accelerator"
-      ModelReferenceVersion   "1.17"
-      List {
-	ListType		InputPortNames
-	port0			"coeff"
-	port1			"order"
-	port2			"signal type (off, poly, or sine)"
-	port3			"sine frequency"
-	port4			"tf or gain"
-	port5			"on/off"
-      }
-      List {
-	ListType		OutputPortNames
-	port0			"Out signal"
-      }
-      List {
-	ListType		OutputPortOutputBusAsStructs
-	port0			"off"
-      }
-      CopyOfModelName	      "input_signal"
-    }
-    Block {
-      BlockType		      ModelReference
-      Name		      "reference signal"
-      SID		      161
-      Ports		      [6, 1]
-      Position		      [510, 591, 730, 684]
-      ModelNameDialog	      "input_signal"
-      SimulationMode	      "Accelerator"
-      ModelReferenceVersion   "1.17"
-      List {
-	ListType		InputPortNames
-	port0			"coeff"
-	port1			"order"
-	port2			"signal type (off, poly, or sine)"
-	port3			"sine frequency"
-	port4			"tf or gain"
-	port5			"on/off"
-      }
-      List {
-	ListType		OutputPortNames
-	port0			"Out signal"
-      }
-      List {
-	ListType		OutputPortOutputBusAsStructs
-	port0			"off"
-      }
-      CopyOfModelName	      "input_signal"
-    }
-    Block {
-      BlockType		      ModelReference
-      Name		      "sensor disturbance signal"
-      SID		      162
-      Ports		      [6, 1]
-      Position		      [510, 779, 730, 876]
-      ModelNameDialog	      "input_signal"
-      SimulationMode	      "Accelerator"
-      ModelReferenceVersion   "1.17"
-      List {
-	ListType		InputPortNames
-	port0			"coeff"
-	port1			"order"
-	port2			"signal type (off, poly, or sine)"
-	port3			"sine frequency"
-	port4			"tf or gain"
-	port5			"on/off"
-      }
-      List {
-	ListType		OutputPortNames
-	port0			"Out signal"
-      }
-      List {
-	ListType		OutputPortOutputBusAsStructs
-	port0			"off"
-      }
-      CopyOfModelName	      "input_signal"
-    }
-    Block {
-      BlockType		      Reference
-      Name		      "tf"
-      SID		      163
-      Ports		      [1, 1]
-      Position		      [155, 652, 205, 668]
-      NamePlacement	      "alternate"
-      LibraryVersion	      "1.107"
-      SourceBlock	      "cstblocks/LTI System"
-      SourceType	      "LTI Block"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      FunctionWithSeparateData off
-      RTWMemSecFuncInitTerm   "Inherit from model"
-      RTWMemSecFuncExecute    "Inherit from model"
-      RTWMemSecDataConstants  "Inherit from model"
-      RTWMemSecDataInternal   "Inherit from model"
-      RTWMemSecDataParameters "Inherit from model"
-      sys		      "r.tf"
-      IC		      "[]"
-    }
-    Block {
-      BlockType		      Reference
-      Name		      "tf1"
-      SID		      164
-      Ports		      [1, 1]
-      Position		      [150, 522, 200, 538]
-      NamePlacement	      "alternate"
-      LibraryVersion	      "1.107"
-      SourceBlock	      "cstblocks/LTI System"
-      SourceType	      "LTI Block"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      FunctionWithSeparateData off
-      RTWMemSecFuncInitTerm   "Inherit from model"
-      RTWMemSecFuncExecute    "Inherit from model"
-      RTWMemSecDataConstants  "Inherit from model"
-      RTWMemSecDataInternal   "Inherit from model"
-      RTWMemSecDataParameters "Inherit from model"
-      sys		      "da.tf"
-      IC		      "[]"
-    }
-    Block {
-      BlockType		      Reference
-      Name		      "tf2"
-      SID		      165
-      Ports		      [1, 1]
-      Position		      [150, 392, 200, 408]
-      NamePlacement	      "alternate"
-      LibraryVersion	      "1.107"
-      SourceBlock	      "cstblocks/LTI System"
-      SourceType	      "LTI Block"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      FunctionWithSeparateData off
-      RTWMemSecFuncInitTerm   "Inherit from model"
-      RTWMemSecFuncExecute    "Inherit from model"
-      RTWMemSecDataConstants  "Inherit from model"
-      RTWMemSecDataInternal   "Inherit from model"
-      RTWMemSecDataParameters "Inherit from model"
-      sys		      "dp.tf"
-      IC		      "[]"
-    }
-    Block {
-      BlockType		      Reference
-      Name		      "tf3"
-      SID		      166
-      Ports		      [1, 1]
-      Position		      [145, 842, 195, 858]
-      NamePlacement	      "alternate"
-      LibraryVersion	      "1.107"
-      SourceBlock	      "cstblocks/LTI System"
-      SourceType	      "LTI Block"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      FunctionWithSeparateData off
-      RTWMemSecFuncInitTerm   "Inherit from model"
-      RTWMemSecFuncExecute    "Inherit from model"
-      RTWMemSecDataConstants  "Inherit from model"
-      RTWMemSecDataInternal   "Inherit from model"
-      RTWMemSecDataParameters "Inherit from model"
-      sys		      "ds.tf"
-      IC		      "[]"
     }
     Line {
       Name		      "y"
       Labels		      [0, 0]
       SrcBlock		      "Sum"
       SrcPort		      1
-      Points		      [15, 0]
+      Points		      [30, 0; 0, 105]
       Branch {
-	Points			[15, 0]
+	Points			[0, 30]
 	Branch {
-	  Points		  [0, 135]
 	  DstBlock		  "Sensor Gain"
 	  DstPort		  1
 	}
 	Branch {
-	  DstBlock		  "Goto y"
+	  DstBlock		  "Mux"
 	  DstPort		  1
 	}
       }
       Branch {
-	Points			[0, -435]
-	DstBlock		"error scope"
+	Points			[180, 0; 0, 85; -115, 0]
+	DstBlock		"Sum4"
 	DstPort			1
       }
     }
@@ -1458,6 +1110,12 @@ Model {
       SrcBlock		      "Sum3"
       SrcPort		      1
       DstBlock		      "Nominal Plant"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Gain1"
+      SrcPort		      1
+      DstBlock		      "Sum2"
       DstPort		      1
     }
     Line {
@@ -1498,261 +1156,102 @@ Model {
       DstPort		      2
     }
     Line {
-      SrcBlock		      "reference signal"
-      SrcPort		      1
-      Points		      [45, 0]
-      Branch {
-	DstBlock		"Sum2"
-	DstPort			1
-      }
-      Branch {
-	Points			[0, -50]
-	DstBlock		"Goto da1"
-	DstPort			1
-      }
-    }
-    Line {
-      SrcBlock		      "actuator disturbance signal"
-      SrcPort		      1
-      Points		      [375, 0]
-      Branch {
-	Points			[60, 0]
-	Branch {
-	  DstBlock		  "Sum3"
-	  DstPort		  1
-	}
-	Branch {
-	  DstBlock		  "Goto da"
-	  DstPort		  1
-	}
-      }
-      Branch {
-	Points			[0, -225]
-	DstBlock		"error scope1"
-	DstPort			1
-      }
-    }
-    Line {
-      SrcBlock		      "plant disturbance signal"
-      SrcPort		      1
-      Points		      [670, 0]
-      Branch {
-	DstBlock		"Sum"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"Goto dp"
-	DstPort			1
-      }
-    }
-    Line {
-      SrcBlock		      "sensor disturbance signal"
-      SrcPort		      1
-      Points		      [430, 0]
-      Branch {
-	DstBlock		"Sum1"
-	DstPort			2
-      }
-      Branch {
-	DstBlock		"Goto ds"
-	DstPort			1
-      }
-    }
-    Line {
-      SrcBlock		      "Constant"
-      SrcPort		      1
-      DstBlock		      "plant disturbance signal"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant1"
-      SrcPort		      1
-      DstBlock		      "plant disturbance signal"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "Constant2"
-      SrcPort		      1
-      DstBlock		      "plant disturbance signal"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Constant3"
-      SrcPort		      1
-      DstBlock		      "plant disturbance signal"
-      DstPort		      4
-    }
-    Line {
-      SrcBlock		      "tf2"
-      SrcPort		      1
-      DstBlock		      "plant disturbance signal"
-      DstPort		      5
-    }
-    Line {
-      SrcBlock		      "Constant6"
-      SrcPort		      1
-      DstBlock		      "actuator disturbance signal"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant7"
-      SrcPort		      1
-      DstBlock		      "actuator disturbance signal"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "Constant8"
-      SrcPort		      1
-      DstBlock		      "actuator disturbance signal"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Constant9"
-      SrcPort		      1
-      DstBlock		      "actuator disturbance signal"
-      DstPort		      4
-    }
-    Line {
-      SrcBlock		      "tf1"
-      SrcPort		      1
-      DstBlock		      "actuator disturbance signal"
-      DstPort		      5
-    }
-    Line {
-      SrcBlock		      "Constant11"
-      SrcPort		      1
-      DstBlock		      "actuator disturbance signal"
-      DstPort		      6
-    }
-    Line {
-      SrcBlock		      "Constant12"
-      SrcPort		      1
-      DstBlock		      "reference signal"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant13"
-      SrcPort		      1
-      DstBlock		      "reference signal"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "Constant14"
-      SrcPort		      1
-      DstBlock		      "reference signal"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Constant15"
-      SrcPort		      1
-      DstBlock		      "reference signal"
-      DstPort		      4
-    }
-    Line {
-      SrcBlock		      "tf"
-      SrcPort		      1
-      DstBlock		      "reference signal"
-      DstPort		      5
-    }
-    Line {
-      SrcBlock		      "Constant17"
-      SrcPort		      1
-      DstBlock		      "reference signal"
-      DstPort		      6
-    }
-    Line {
-      SrcBlock		      "Constant18"
-      SrcPort		      1
-      DstBlock		      "sensor disturbance signal"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant19"
-      SrcPort		      1
-      DstBlock		      "sensor disturbance signal"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "Constant20"
-      SrcPort		      1
-      DstBlock		      "sensor disturbance signal"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Constant21"
-      SrcPort		      1
-      DstBlock		      "sensor disturbance signal"
-      DstPort		      4
-    }
-    Line {
-      SrcBlock		      "tf3"
-      SrcPort		      1
-      DstBlock		      "sensor disturbance signal"
-      DstPort		      5
-    }
-    Line {
-      SrcBlock		      "Constant23"
-      SrcPort		      1
-      DstBlock		      "sensor disturbance signal"
-      DstPort		      6
-    }
-    Line {
-      SrcBlock		      "Constant16"
-      SrcPort		      1
-      DstBlock		      "tf"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant10"
-      SrcPort		      1
-      DstBlock		      "tf1"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant4"
-      SrcPort		      1
-      DstBlock		      "tf2"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant22"
-      SrcPort		      1
-      DstBlock		      "tf3"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Constant5"
-      SrcPort		      1
-      DstBlock		      "plant disturbance signal"
-      DstPort		      6
-    }
-    Line {
       SrcBlock		      "Mux"
       SrcPort		      1
       DstBlock		      "in vs out scope"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "From r"
+      SrcBlock		      "Sensor Disturbance"
       SrcPort		      1
-      DstBlock		      "Actuator Gain1"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Actuator Gain1"
-      SrcPort		      1
-      Points		      [15, 0; 0, 30]
-      DstBlock		      "Mux"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "From y"
-      SrcPort		      1
-      DstBlock		      "Mux"
+      Points		      [15, 0]
+      DstBlock		      "Sum1"
       DstPort		      2
     }
-    Annotation {
-      Position		      [966, 861]
+    Line {
+      SrcBlock		      "Actuator Disturbance"
+      SrcPort		      1
+      DstBlock		      "Sum3"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Input Order"
+      SrcPort		      1
+      DstBlock		      "Switch"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Switch"
+      SrcPort		      1
+      Points		      [10, 0]
+      Branch {
+	DstBlock		"Gain1"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 285; 720, 0; 0, -45]
+	Branch {
+	  Points		  [0, -85]
+	  DstBlock		  "Mux"
+	  DstPort		  2
+	}
+	Branch {
+	  DstBlock		  "Sum4"
+	  DstPort		  2
+	}
+      }
+    }
+    Line {
+      SrcBlock		      "Dist. Type"
+      SrcPort		      1
+      DstBlock		      "Switch1"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Ramp"
+      SrcPort		      1
+      Points		      [35, 0; 0, 45]
+      DstBlock		      "Switch"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Step"
+      SrcPort		      1
+      Points		      [35, 0; 0, -45]
+      DstBlock		      "Switch"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "Plant Disturbance Gain"
+      SrcPort		      1
+      DstBlock		      "Sum"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Switch1"
+      SrcPort		      1
+      DstBlock		      "Plant Disturbance Gain"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Plant Sinusoidal Disturbance"
+      SrcPort		      1
+      Points		      [0, 20; 120, 0]
+      DstBlock		      "Switch1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Plant Polynomial Disturbance"
+      SrcPort		      1
+      Points		      [0, 20; -80, 0]
+      DstBlock		      "Switch1"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "Sum4"
+      SrcPort		      1
+      DstBlock		      "Gry Scope"
+      DstPort		      1
     }
   }
 }

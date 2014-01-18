@@ -99,16 +99,16 @@ legend('Ws*Sn + Wu*Tn')
 
 %% Plot Error function Er
 figure('name','Error function Er (Gre*r-Kd*r)');
-plot(simulink_ery_time,simulink_ery_out(:,2))
+plot(simulink_ery_time,simulink_ery_out)
 %% Plot Error function Ea
 figure('name','Error function Ea');
-plot(simulink_eay_time,simulink_eay_out(:,2))
+plot(simulink_eay_time,simulink_eay_out)
 %% Plot Error function Ep
 figure('name','Error function Ep');
-plot(simulink_epy_time,simulink_epy_out(:,2))
+plot(simulink_epy_time,simulink_epy_out)
 %% Plot Error function Es
 figure('name','Error function Es');
-plot(simulink_esy_time,simulink_esy_out(:,2))
+plot(simulink_esy_time,simulink_esy_out)
 
 %% End
 hold off;
