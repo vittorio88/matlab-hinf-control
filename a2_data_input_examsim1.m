@@ -89,7 +89,6 @@ settlingTime.tolerance=0.05;
 Gp.nCoefficients=2;
 Gp.nOriginPoles=1;
 Gp.inputString='(10e6*K)/((s^2 + P*s))'; % ORIG
-% Gp.inputString='s^5*(10e6*coeff1)/((s + coeff2))'; % WRONG
 Gp.coefficient(1)=struct('name','K'...
                 ,'low', 0.8 ...
                 ,'high', 1.2 );

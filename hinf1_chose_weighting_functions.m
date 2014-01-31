@@ -9,14 +9,14 @@
 
 
 % For polynomial or null plant disturbance
-if dp.type == 0 || dp.type == 1
+if dp.values.type == 0 || dp.values.type == 1
     W1.tf.value=Ws.tf.value;
     W1.mod.value=W1.tf.value * s^sys.h/(s+.01)^sys.h; % Replace origin poles with poles close to origin for simulink
     W1.mod.value=minreal(W1.mod.value);
 end
 
 % For sinusoidal plant disturbance
-if dp.type==2
+if dp.values.type==2
     W1.tf.value=Ws.tf.value;
     W1.mod.value=W1.tf.value;
 end
@@ -52,8 +52,8 @@ W2.mod.value=tf(1/T.design.p.value); % Same as Wt without zeros
 
 
 %% Get tf numerator and denominator
-[ W2.tf.num W2.tf.den]=tfdata(W2.tf.value, 'v');
-[ W2.mod.num W2.mod.den]=tfdata(W2.mod.value, 'v');
+[ W2.tf.num, W2.tf.den]=tfdata(W2.tf.value, 'v');
+[ W2.mod.num, W2.mod.den]=tfdata(W2.mod.value, 'v');
 
 W2.tf.zpk=zpk(W2.tf.value);
 W2.mod.zpk=zpk(W2.tf.value);

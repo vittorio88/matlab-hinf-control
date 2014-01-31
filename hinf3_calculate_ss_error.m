@@ -5,12 +5,12 @@
 
 
 %% Find steady state error due to polynomial reference input
-r.actualError=dcgain(s*Kd*S.nominal.value*r.signal*r.tf);
+r.errors.nominal=dcgain(s*Kd*S.nominal.value*r.signal*r.values.tf);
 
 
 %% Find steady state error due to disturbance da
 
-da.actualError = dcgain(s*T.nominal.value * 1/(Ga*Gc.mod.value*Gf*Gs) *da.signal * da.tf);
+da.errors.nominal = dcgain(s*T.nominal.value * 1/(Ga*Gc.mod.value*Gf*Gs) *da.signal * da.values.tf);
 
 % % OLD PROBABLY WORKS
 % % If da is null, da error is null
@@ -31,7 +31,7 @@ da.actualError = dcgain(s*T.nominal.value * 1/(Ga*Gc.mod.value*Gf*Gs) *da.signal
 
 %% Find steady state error due to disturbance dp
 
-dp.actualError = dcgain(s*S.nominal.value * dp.signal * dp.tf / Gs);
+dp.errors.nominal = dcgain(s*S.nominal.value * dp.signal * dp.values.tf / Gs);
 
 % % OLD PROBABLY WORKS
 % % If there is no plant disturbance error is null.
@@ -58,7 +58,7 @@ dp.actualError = dcgain(s*S.nominal.value * dp.signal * dp.tf / Gs);
 
 
 %% Find steady state error due to sinusoidal disturbance ds
-ds.actualError=dcgain(s*T.nominal.value*ds.signal*ds.tf);
+ds.errors.nominal=dcgain(s*T.nominal.value*ds.signal*ds.values.tf);
 
 % % OLD PROBABLY WORKS
 % if ds.type==0

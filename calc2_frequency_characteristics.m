@@ -56,10 +56,10 @@ end
 
 % Wc and Wn should be at least equal to Wcmin and Wnmin calculated using
 % rise time, settling time, and overshoot.
-% Wc=Wcmin;
-% Wn=Wnmin;
+% Wc=Wc.min;
+% Wn=Wn.min;
 
-Wc.design.value=700 % Highest point at which Wt has no influence (use 'bode(Wt)' to estimate)
+Wc.design.value=700; % Highest point at which Wt has no influence (use 'bode(Wt)' to estimate)
 % REMEMBER TO VIEW crossover frequency bode(L.nominal.value)
 
 Wn.design.value=Wc.design.value/sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2);
