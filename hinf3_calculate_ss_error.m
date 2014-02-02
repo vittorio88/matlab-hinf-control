@@ -17,8 +17,8 @@ da.errors.nominal = dcgain(s*T.nominal.value * 1/(Ga*Gc.mod.value*Gf*Gs) *da.sig
 % if da.type==0
 %     da.actualError=0;
 % end
-% 
-% 
+%
+%
 % % Calculate da_error if da is a polynomial input
 % if da.type==1
 %     if   (da.mu + sys.p) < sys.h
@@ -38,7 +38,7 @@ dp.errors.nominal = dcgain(s*S.nominal.value * dp.signal * dp.values.tf / Gs);
 % if dp.type==0
 %     dp.actualError=0;
 % end
-% 
+%
 % % Calculate dp_error if dp is a polynomial input
 % if dp.type==1
 %     if   (dp.mu + sys.p) < sys.h
@@ -48,11 +48,11 @@ dp.errors.nominal = dcgain(s*S.nominal.value * dp.signal * dp.values.tf / Gs);
 %         dp.actualError = dp.coefficient * Kc*dcgain(S.nominal.star)*Kp; % POSSIBLY WRONG
 %     end
 % end
-% 
+%
 % % Calculate dp_error if dp is a sinusoidal input
 % if dp.type==2
 %     dp.actualError=abs(dp.coefficient*evalfr(S.nominal.star,1i*dp.frequency)); % GOOD CHECK FOR FILTER
-%     
+%
 % end
 
 
@@ -64,7 +64,7 @@ ds.errors.nominal=dcgain(s*T.nominal.value*ds.signal*ds.values.tf);
 % if ds.type==0
 %     ds.actualError=0;
 % end
-% 
+%
 % if ds.type==2
 %     ds.actualError=abs(ds.coefficient*evalfr(T.nominal.value,1i*ds.frequency)/(Gs)); % GOOD CHECK FOR FILTER
 %     %     ds_error=ds_coeff*Kc*dcgain(Tn)/Gs; %WRONG

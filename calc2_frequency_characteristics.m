@@ -65,6 +65,10 @@ Wc.design.value=700; % Highest point at which Wt has no influence (use 'bode(Wt)
 Wn.design.value=Wc.design.value/sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2);
 Wb.design.value=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4));
 
+%% check Wc
+if Wc.design.value < Wc.min
+    error( 'Wc is too low');
+end
 
 
 

@@ -1,10 +1,29 @@
 % generate_hinf.m
 
 
+%% TODO ERROR NEEDS FIXING
+% 
+% Error using ltiss (line 28)
+% SYS is not a SYSTEM matrix
+% 
+% Error in hinf2_generate_controller (line
+% 20)
+% [Ac,Bc,Cc,Dc]=ltiss(Cmod);
+% 
+% Error in a0_executor (line 18)
+% hinf2_generate_controller % Generates
+% hinf controller
+
+
 
 %% Create state space model from Simulink
 [Am,Bm,Cm,Dm]=linmod('generalized_plant_M'); %% Get stace-space model from plantM simulink
 M_simulink=ltisys(Am,Bm,Cm,Dm); %% convert state-space to SYS model M
+
+% Interesting to view simulink output
+myss=ss(Am,Bm,Cm,Dm); 
+bode(myss)
+
 
 %% add two unstable poles previously removed from Wt.
 % always need 2 pole removales because Wt has 2 poles

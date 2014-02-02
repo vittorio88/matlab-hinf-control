@@ -1,6 +1,7 @@
 %%% Process input
 
-%% Get nominal plant transfer function
+%% Process Gp input
+
 
 % Get nominal value for plant coefficients
 for iCoeff=1: 1 : length(Gp.coefficient)
@@ -20,6 +21,10 @@ end
 Gp.nominal.tf= eval(Gp.nominal.string);
 [Gp.nominal.numerator,Gp.nominal.denominator]=tfdata(Gp.nominal.tf,'v');
 
+% Count poles at origin
+Gp.nOriginPoles=countpolesatorigin(Gp.nominal.tf);
+
+
 % plant static gain
 Kp=dcgain(Gp.nominal.tf);
 
@@ -29,29 +34,25 @@ Gf=Gr/(Kd*Gs);
 
 
 %% Build input functions
-r.signal=buildsignalinputfunction( r.values, vector.log.value );
-da.signal=buildsignalinputfunction( da.values, vector.log.value);
-dp.signal=buildsignalinputfunction( dp.values, vector.log.value );
-ds.signal=buildsignalinputfunction( ds.values, vector.log.value);
+% Input functions are dependent on order of disturbance, coefficients, and
+% include downhill tf.
+r.signal  = buildsignalinputfunction(  r.values );
+da.signal = buildsignalinputfunction( da.values );
+dp.signal = buildsignalinputfunction( dp.values );
+ds.signal = buildsignalinputfunction( ds.values );
 
 %% Scale input signals by downhill transfer function or gain before
 %% addition
+% cltf string is derived from block diagram reduction from feedback form
 
+r.cltfString = '( Gc*Ga*Gp/(1+Gf*Gs*Gc*Ga*Gp) )';% aka Gry
+r.errorString = strcat( tf2string(tf(r.signal)), '* (', int2str(Kd) ,' - ',r.cltfString,')');
 
-r.cltfString='( Gc*Ga*Gp/(1+Gf*Gs*Gc*Ga*Gp) )';% aka Gry
-r.tempString=strcat( '(', r.cltfString, ' - ', int2str(Kd) ,')' );
-r.errorString= strcat( tf2string(tf(r.signal*r.values.tf)), ' * ' ,r.tempString );% aka Ery
-r.errorString= strcat( tf2string(tf(r.signal*r.values.tf)), ' * ' ,r.cltfString );% aka Ery REVIEW THIS LINE
+da.cltfString='( Gp / (1 + Gp*Ga*Gc*Gf*Gs) )';
+da.errorString= strcat(da.cltfString , ' * ' , tf2string(tf(da.signal) ));
 
+dp.cltfString='(1 / (1 + Gp*Ga*Gc*Gf*Gs) )';
+dp.errorString= strcat(dp.cltfString , ' * ' , tf2string(tf(dp.signal) ));
 
-da.cltfString='(Gp/ (1 + Gp*Ga*Gc*Gf*Gs))';
-da.errorString= strcat(da.cltfString , ' * ' , tf2string(tf(da.signal*da.values.tf) ));
-
-
-dp.cltfString='(1 / (1 + Gp*Ga*Gc*Gf*Gs))';
-dp.errorString= strcat(dp.cltfString , ' * ' , tf2string(tf(dp.signal*dp.values.tf) ));
-
-ds.cltfString='(Gf*Gc*Ga*Gp / (1 + Gp*Ga*Gc*Gf*Gs))';
-ds.errorString= strcat(ds.cltfString , ' * ' , tf2string(tf(ds.signal*ds.values.tf) ));
-
-
+ds.cltfString='(Gf*Gc*Ga*Gp / (1 + Gp*Ga*Gc*Gf*Gs) )';
+ds.errorString= strcat(ds.cltfString , ' * ' , tf2string(tf(ds.signal) ));

@@ -1,7 +1,11 @@
-function [ filter ] = buildhighpassbwfilterfrommask( attenuateValue, attenuateFrequency, Sp,systemType, elbowBoost)
 
-s=tf('s');
+attenuateValue = 0.01;
+attenuateFrequency=10;
+Sp=1.3295;
+systemType=1;
 arbitraryHighFrequency=2000;
+s=tf('s');
+elbowBoost=0;
 
 % butterworth polynomials
 
@@ -67,10 +71,3 @@ if countpolesatorigin(filter^-1) ~= systemType
     error('systemType does not equal number of poles of specified')
 end
 
-
-
-
-
-
-
-end

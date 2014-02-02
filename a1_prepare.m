@@ -4,7 +4,7 @@ clear all
 s=tf('s');
 
 %% Generate fixed frequency vectors
-nPermutations=10; % how many pieces to divide uncertainty range into.
+nPermutations=10; % how many pieces to divide uncertainty range in for Wu. (computationally expensive)
 vector.log.slices=1000;
 vector.log.freq.low=-2;
 vector.log.freq.high=5;
