@@ -3,7 +3,7 @@
 %% change displayformat to frequency
 
 Wt.zpk.value.DisplayFormat='frequency';
-Wu.zpk.value.DisplayFormat='frequency';
+Wu.multiplicative.zpk.value.DisplayFormat='frequency';
 Ws.zpk.value.DisplayFormat='frequency';
 W1.mod.zpk.DisplayFormat='frequency';
 W1.mod.zpk.DisplayFormat='frequency';
@@ -16,7 +16,7 @@ Gc.mod.zpk.DisplayFormat='frequency';
 %% PRINT ZPK in frequency format
 
 Wt.zpk.value
-Wu.zpk.value
+Wu.multiplicative.zpk.value
 Ws.zpk.value
 W1.mod.zpk
 W1.mod.zpk
@@ -27,7 +27,7 @@ Gc.mod.zpk
 %% build tf strings
 
 Wt.out=tf2string(Wt.tf.value);
-Wu.out=tf2string(Wu.tf.value);
+Wu.out=tf2string(Wu.multiplicative.tf.value);
 Ws.out=tf2string(Ws.tf.value);
 
 W1.tf.out=tf2string(W1.tf.value);

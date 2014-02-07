@@ -12,25 +12,12 @@
 
 % create generic Ws if there is no low frequency sinusoidal disturbance
 if (dp.values.type == 0 || dp.values.type == 1) && (da.values.type == 0 || da.values.type == 1)
-    
-    if sys.h == 0
-        Ws.tf.inv=S.design.p.value;
-    end
-    
-    % TODO CHECKME
-    % only applicable for h = 1
-    if sys.h == 1
-        Ws.tf.inv=S.design.value;
-    end
-    
-    
-    if sys.h > 1
+   
         Ws.tf.polepos=Wc.design.value*10^(-1); % Manually move as close to Wc as possible without cutting resonant peak of S
         Ws.tf.inv=S.design.p.value*s^sys.h/(s+Ws.tf.polepos)^sys.h;
-    end
     %      Verify Ws_polepos with following command
     %      bode(tf(Sp),S,Ws.tf.inv,tf(s))
-        
+    
 end
 
 
@@ -77,14 +64,15 @@ if dp.values.type == 2
         Ws.tf.inv=buildhighpassbwfilterfrommask_stabilized(Ms_lf.db, dp.values.frequency, S.design.p.value, vector.log.value);
     end
     
-    if sys.h >0
-        Ws.tf.inv=buildhighpassbwfilterfrommask(Ms_lf.value, dp.values.frequency, S.design.p.value , sys.h, 0);
+    if sys.h > 0
+        Ws.tf.inv=buildhighpassbwfilterfrommask(Ms_lf.value, dp.values.frequency, S.design.p.value , sys.h, 1);
     end
     
     
 end
 
-bode(tf(S.design.p.value),tf(Ms_lf.value),Ws.tf.inv)
+derp=buildhighpassbwfilterfrommask_stabilized(Ms_lf.db, dp.values.frequency, S.design.p.value, vector.log.value);
+
 Ws.tf.value=Ws.tf.inv^-1;
 
 
@@ -127,46 +115,33 @@ Wt.poles=minreal(Wt.tf.value*T.design.p.value); % Pole position equal Wt with dc
 %% Veriy Wt
 
 % Check Wt_inv
-% broken%  check_mt=abs(1/(1 + 1i*ds.values.frequency*sqrt(2)/(Mt_hf_polepos) + (1i*ds_freq)^2/(Mt_hf_polepos)^2) )% should return Mt
+% broken%  check_mt=abs(1/(1 + 1i*dMt_hs.values.frequency*sqrt(2)/(Mt_hf.polepos) + (1i*ds_freq)^2/(Mt_hf.polepos)^2) )% should return Mt
 %     check_wt=abs(evalfr(Wt.tf.inv,1i*ds.values.frequency)) % Should return Mt
 %     check_wtdb=20*log10(abs(evalfr(Wt.tf.inv,1i*ds.values.frequency))) % should return Mt_db
-%     check_wtbutdb=20*log10(abs(evalfr(Wt_inv,1i*Mt_hf_polepos))) %should be-3db
-%     bode(Wt_inv,minreal(Wt_inv))
-%  bode(Wt_inv)
+%     check_wtbutdb=20*log10(abs(evalfr(Wt.tf.inv,1i*Mt_hf.polepos))) %should be-3db
+%     bode(Wt_inv,minreal(Wt.tf.inv))
+%  bode(Wt.tf.inv)
 
 
 %% Create weighting function Wu to represent plant uncertainty
 
+%TODO DO ALL UNCERTAINTY TYPES
 
-%% TODO CHECK ME
-% Choose function to call based on amount of uncertain variables.
-if length(Gp.coefficient) == 1
-    Gp.uncertainArray = permutatetfstringonedof   (Gp.inputString, ...
-        Gp.coefficient(1).name, Gp.coefficient(1).low, Gp.coefficient(1).high, nPermutations);
-end
+% create vector containing all possible tf
+Gp.uncertainArray = permutatetfstring(Gp.inputString, Gp.coefficient,nPermutations);
 
-if length(Gp.coefficient) == 2
-    Gp.uncertainArray = permutatetfstringtwodof  (Gp.inputString, ...
-        Gp.coefficient(1).name, Gp.coefficient(1).low, Gp.coefficient(1).high, ...
-        Gp.coefficient(2).name, Gp.coefficient(2).low, Gp.coefficient(2).high, nPermutations);
-end
-
-if length(Gp.coefficient) == 3
-    Gp.uncertainArray = permutatetfstringthreedof(Gp.inputString, ...
-        Gp.coefficient(3).name, Gp.coefficient(1).low, Gp.coefficient(1).high, ...
-        Gp.coefficient(3).name, Gp.coefficient(2).low, Gp.coefficient(2).high, ...
-        Gp.coefficient(3).name, Gp.coefficient(3).low, Gp.coefficient(3).high, nPermutations);
-end
-
-% Generate Uncertain weighting function array and discretize
-Wu.uncertain.array = Gp.uncertainArray/Gp.nominal.tf - 1;
-
+% Generate Uncertain weighting function array
+Wu.multiplicative.uncertain.value = Gp.uncertainArray/Gp.nominal.tf - 1;
 
 % Discretize uncertainty array and find maximum value for every frequency
-Wu.uncertain.discreteArray = discretizetfarray(Wu.uncertain.array, vector.log.value);
-Wu.tf.discrete = findmaxgainforeveryfrequency(Wu.uncertain.discreteArray ,vector.log.value);
+Wu.multiplicative.uncertain.discrete = discretizetfarray(Wu.multiplicative.uncertain.value, vector.log.value);
+
+% Get magnitude vector with max for each frequency in array of discrete tf
+Wu.multiplicative.tf.discrete = findmaxgainforeveryfrequency(Wu.multiplicative.uncertain.discrete ,vector.log.value);
 
 % Convert discrete model to tf
-Wu.tf.value = magnitudevectortotf(Wu.tf.discrete,vector.log.value, 4); % 3rd arg. is order of fit
+Wu.multiplicative.tf.value = magnitudevectortotf(Wu.multiplicative.tf.discrete,vector.log.value, 4); % 3rd arg. is order of fit
+
+
 
 

@@ -60,14 +60,14 @@ end
 % Wn=Wn.min;
 
 Wc.design.value=700; % Highest point at which Wt has no influence (use 'bode(Wt)' to estimate)
-% REMEMBER TO VIEW crossover frequency bode(L.nominal.value)
+% REMEMBER TO VIEW crossover frequency 'bode(L.nominal.value)'
 
-Wn.design.value=Wc.design.value/sqrt( sqrt(1+4*dampingCoefficient^4) - 2*dampingCoefficient^2);
-Wb.design.value=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4));
+Wn.design.value=Wc.design.value/sqrt( sqrt(1 + 4*dampingCoefficient^4) - 2*dampingCoefficient^2);
+Wb.design.value=Wn.design.value*sqrt(1 - 2*dampingCoefficient^2 + sqrt(2 - 4*dampingCoefficient^2+4*dampingCoefficient^4));
 
 %% check Wc
 if Wc.design.value < Wc.min
-    error( 'Wc is too low');
+    error( 'Wc is too low to satisfy rising time or settling time constraint');
 end
 
 
@@ -85,6 +85,7 @@ S.design.bandwidth=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampin
 S.design.star.value=S.design.value/s^(sys.h);
 S.design.star.value=minreal(S.design.star.value);
 S.design.star.dcgain=dcgain(S.design.star.value);
+% S.design.star.dcgain %%% CHECK THAT I AM INFERIOR TO MAX ERROR FROM R and DP
 
 %% Calculates sensitivity and complementary sensitivity function peaks
 T.design.p.value=1/(2*dampingCoefficient*sqrt(1-dampingCoefficient^2));
@@ -92,3 +93,32 @@ S.design.p.value=2*dampingCoefficient*sqrt(2+4*dampingCoefficient^2+2*sqrt(1+8*d
 
 T.design.p.db=20*log10(T.design.p.value);
 S.design.p.db=20*log10(S.design.p.value);
+
+
+%% Calculate steady state error for functions that have mu + p = h
+if r.values.type == 1
+r.errors.design = dcgain(s*Kd*S.design.value*r.signal*r.values.tf);
+    if r.errors.design > r.errors.max
+        error('r design steady state error does not satisfy spec.')
+    end
+end
+
+if da.values.type == 1
+    % both are correct
+    da.errors.design = dcgain(s*T.design.value * 1/(Ga*Gf*Gs) *da.signal * da.values.tf);
+%     da.errors.design =  dcgain(da.values.coefficient* Kp/(1+Kp*Ga*Gf*Gs));
+    if da.errors.design > da.errors.max
+        error('da design steady state error does not satisfy spec.')
+    end
+end
+
+
+if dp.values.type == 1
+dp.errors.design =dcgain(s*S.design.value * dp.signal * dp.values.tf / Gs);
+    if dp.errors.design > dp.errors.max
+        error('dp design steady state error does not satisfy spec.')
+    end
+end
+
+
+

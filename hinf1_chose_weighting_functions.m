@@ -2,12 +2,15 @@
 % Chose Weighting function W1 and W2
 % Requires Ws, Wu, and Wt filters
 
-%% GET W1
+%% Get W1
 
 % if W1 has mu+p poles in the origin, it is unstable.
 % % They must be moved by 0.01 from origin
+% W1.tf.value=derp^-1; % SELECT PASSTHROUGH MODE
 W1.tf.value=Ws.tf.value;
+W1.tf.inv=W1.tf.value^-1;   
 
+%% Modify W1
 % For polynomial or null plant disturbance
 if (dp.values.type == 0 || dp.values.type == 1) && (da.values.type == 0 || da.values.type == 1)
     W1.mod.value=W1.tf.value * s^sys.h/(s+.01)^sys.h; % Replace origin poles with poles close to origin for simulink
@@ -16,16 +19,19 @@ end
 
 % For sinusoidal plant disturbance
 if da.values.type == 2
-    W1.mod.inv=Ws.tf.inv*(s-da.values.frequency*10^-1)^sys.h/s^sys.h;
+    W1.mod.value=W1.tf.value*s^sys.h/(s + da.values.frequency*10^-1)^sys.h;
 end
 
 if dp.values.type == 2
-    W1.mod.inv=Ws.tf.inv*(s-dp.values.frequency*10^-1)^sys.h/s^sys.h;
+    W1.mod.value=W1.tf.value*s^sys.h/(s + dp.values.frequency*10^-1)^sys.h;
+%     W1.mod.value=W1.tf.value; % passthrough mode
 end
 
-W1.mod.value=W1.mod.inv^-1;
+% minreal
 W1.mod.value=minreal(  W1.mod.value);
 
+% create different representations
+W1.mod.inv=W1.mod.value^-1;
 
 [W1.tf.num,W1.tf.den]=tfdata(W1.tf.value,'v');
 [W1.mod.num,W1.mod.den]=tfdata(W1.mod.value,'v');
@@ -34,8 +40,15 @@ W1.tf.zpk=zpk(W1.tf.value);
 W1.mod.zpk=zpk(W1.mod.value);
 
 
-% debug prints
-%bode(W1.tf.value, W1.mod.value, tf(S.design.p.value),tf(Ms_lf.value) ,vector.log.value)
+
+
+%% debug prints
+figure
+hold on
+bode(tf(S.design.p.value),tf(Ms_lf.value),S.design.value,W1.tf.inv,W1.mod.inv,derp,logspace(-5,5))
+legend ('Sp','Ms','S','W1inv','W1modinv','derp')
+hold off
+
 
 %% GET W2 - AUTO (FAIL)
 

@@ -37,6 +37,7 @@ dp.values.on=0;
 ds.values.on=0;
 u = [r.values.on,da.values.on,dp.values.on,ds.values.on];
 [simulink_ery_time,simulink_ery_states,simulink_ery_out]=sim('system_model_script_interactive');
+simulink_ery_out = squeeze(simulink_ery_out);
 
 %% get eay
 r.values.on=0;
@@ -45,6 +46,7 @@ dp.values.on=0;
 ds.values.on=0;
 u = [r.values.on,da.values.on,dp.values.on,ds.values.on];
 [simulink_eay_time,simulink_eay_states,simulink_eay_out]=sim('system_model_script_interactive');
+simulink_eay_out = squeeze(simulink_eay_out);
 
 %% get epy
 r.values.on=0;
@@ -53,6 +55,7 @@ dp.values.on=1;
 ds.values.on=0;
 u = [r.values.on,da.values.on,dp.values.on,ds.values.on];
 [simulink_epy_time,simulink_epy_states,simulink_epy_out]=sim('system_model_script_interactive');
+simulink_epy_out = squeeze(simulink_epy_out);
 
 %% get esy
 r.values.on=0;
@@ -61,6 +64,7 @@ dp.values.on=0;
 ds.values.on=1;
 u = [r.values.on,da.values.on,dp.values.on,ds.values.on];
 [simulink_esy_time,simulink_esy_states,simulink_esy_out]=sim('system_model_script_interactive');
+simulink_esy_out = squeeze(simulink_esy_out);
 
 %% reset switches to 1
 r.values.on=1;

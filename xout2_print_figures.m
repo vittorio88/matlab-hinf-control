@@ -1,114 +1,110 @@
-%% Plot Weighting Function Permutations
-figure('name','Weighting Function Permutations');
-semilogx(0,length(vector.log.value));
-hold on;
+%% Plot Weighting Function Permutations and Chosen Weighting Function
+figure('Name','Wu permutations and selection')
+hold on
 grid on;
+bode(Wu.multiplicative.tf.value,'r')
+h = findobj(gcf,'type','line');
+set(h,'linewidth',4);
+bode(Wu.multiplicative.uncertain.value,'g')
+hold off
 
-
-for iPermutation=1: 1 : nPermutations^2
-    semilogx( vector.log.value, Wu.uncertain.discreteArray(1:length(vector.log.value),iPermutation) ,'black' )
-end
-hold off;
-
-%% Plot Chosen Weighting Function Discrete
-figure('name','Chosen Weighting Function Discrete');
-semilogx(0,length(vector.log.value));
-hold on;
-grid on;
-
-
-for cur_i=1: 1 : nPermutations^2
-    semilogx( vector.log.value, Wu.tf.discrete,'black' )
-end
-
-hold off;
-
-%% Plot Fitted Weighting Function
-figure('name','Weighting Function');
-hold on;
-grid on;
-bode(Wu.tf.value)
-hold off;
-
-%% Plot Gp_uncertain(i,j)/Gp_nominal - 1  (SLOW!!!)
-%     for i=1 : 1 : nPermutations
-%         for j=1 : 1 : nPermutations
-%             hold on
-%             bode( Gp_uncertain(i,j)/Gp_nominal - 1 );
-%         end
-%     end
 
 %% Plot Loop, Sensitivity, and complimentary senstivity function
 figure('name','Loop function and sensitivity functions');
-hold on;
-grid on;
-bode(L.design.value,S.design.value,T.design.value)
-legend('Loop Function','Sensitivity Function','Complimentary Sensitivity Function')
-hold off;
+hold on
+lst_subplot1 = subplot(121);
+bode(L.design.value,S.design.value,T.design.value,tf(S.design.p.value),tf(T.design.p.value));
+legend('L','S','T','Sp','Tp')
 
-%% Plot Nominal Loop, Sensitivity, and complimentary senstivity function
-figure('name','Nominal Loop function and sensitivity functions');
-hold on;
-grid on;
-bode(L.nominal.value,S.nominal.value,T.nominal.value)
-legend('Nominal Loop Function','Nominal Sensitivity Function','Nominal Complimentary Sensitivity Function')
-hold off;
+lst_subplot2 = subplot(122);
+bode(L.nominal.value,S.nominal.value,T.nominal.value,tf(S.design.p.value),tf(T.design.p.value))
+legend('L','S','T','Sp','Tp')
+
+title(lst_subplot1, 'design')
+title(lst_subplot2, 'nominal')
+hold off
 
 %% Plot nichols with Sp and Tp
-% ngrid('new')
-figure('name','Nichols of loop function');
-myngridst(T.design.p.value,S.design.p.value)
-legend('Tp','Sp')
+figure('name','Nichols with Loop function');
 hold on
+nichols_subplot1 = subplot(121);
+myngridst(T.design.p.value,S.design.p.value)
 nichols(L.design.value,'r')
-hold off;
+legend('Tp','Sp','L')
 
-%% Plot nominal nichols of Ln with Sp and Tp
-% ngrid('new')
-figure('name','Nichols of nominal loop function');
+nichols_subplot2 = subplot(122);
 myngridst(T.design.p.value,S.design.p.value)
-hold on
 nichols(L.nominal.value,'r')
 legend('Tp','Sp','Ln')
-hold off;
 
-%% check for nominal performance
-figure('name','Check NP, should not pass 0db');
+title(nichols_subplot1, 'design')
+title(nichols_subplot2, 'nominal')
+
+hold off
+
+
+%% Check for NS, NP, RS, and RP
+figure('name','Check for NS, NP, RS, and RP');
+hold on
+check_subplot1 = subplot(221);
 bode(Ws.tf.value*S.nominal.value,Wt.tf.value*T.nominal.value) % both curves should not pass 0db
 legend('Ws*Sn','Wt*Tn')
 
-
-%% check robust performance
-% blue should be over red for lf
-% blue should be under green for hf
-
-figure('name','Check RP, blue over red for lf, blue under green for hf ');
-bode(Ws.tf.value/(1-Wu.tf.value),'r',L.design.value,'b',(1-Ws.tf.value)/Wu.tf.value,'g')
+check_subplot2 = subplot(222);
+bode(Ws.tf.value/(1- Wu.multiplicative.tf.value),'r',L.design.value,'b',(1-Ws.tf.value)/ Wu.multiplicative.tf.value,'g')
 legend('Ws/(1-Wu)','L','(1-Ws)/Wu')
 
-
-%% Check for robust stability
-figure('name','Check RS, should not pass 0db');
-bode(Wu.tf.value*T.nominal.value) % should not pass 0db
+check_subplot3 = subplot(223);
+bode( Wu.multiplicative.tf.value*T.nominal.value) % should not pass 0db
 legend('Wu*Tn')
 
-%% Check for nominal performance and robust stability
-figure('name','Check NP and RS, should not pass 0db');
-bode(Ws.tf.value*S.nominal.value+Wu.tf.value*T.nominal.value) % should not pass 0db
+check_subplot4 = subplot(224);
+bode(Ws.tf.value*S.nominal.value+ Wu.multiplicative.tf.value*T.nominal.value) % should not pass 0db
 legend('Ws*Sn + Wu*Tn')
 
-%% Plot Error function Er
-figure('name','Error function Er (Gre*r-Kd*r)');
-plot(simulink_ery_time,simulink_ery_out)
-%% Plot Error function Ea
-figure('name','Error function Ea');
-plot(simulink_eay_time,simulink_eay_out)
-%% Plot Error function Ep
-figure('name','Error function Ep');
-plot(simulink_epy_time,simulink_epy_out)
-%% Plot Error function Es
-figure('name','Error function Es');
-plot(simulink_esy_time,simulink_esy_out)
+title(check_subplot1, 'Check NP, should not pass 0db')
+title(check_subplot2, 'Check RP, blue over red for lf, blue under green for hf')
+title(check_subplot3, 'Check RS, should not pass 0db')
+title(check_subplot4, 'Check NP and RS, should not pass 0db')
+
+hold off
+
+
+
+%% Plot Simulink error signals
+figure('name','Simulink error signals');
+hold on
+error_subplot1 = subplot(221);
+plot(simulink_ery_time,[simulink_ery_out, ones( length(simulink_ery_out), 1)*r.errors.max])
+
+error_subplot2 = subplot(222);
+plot(simulink_eay_time,[simulink_eay_out, ones( length(simulink_eay_out), 1)*da.errors.max])
+
+error_subplot3 = subplot(223);
+plot(simulink_epy_time,[simulink_epy_out, ones( length(simulink_epy_out), 1)*dp.errors.max])
+
+error_subplot4 = subplot(224);
+plot(simulink_esy_time,[simulink_esy_out, ones( length(simulink_esy_out), 1)*ds.errors.max])
+
+title(error_subplot1, 'Error function Er (Gre*r-Kd*r)')
+title(error_subplot2, 'Error function Ea')
+title(error_subplot3, 'Error function Ep')
+title(error_subplot4, 'Error function Es')
+
+hold off
+
+% %% Plot Error function Er OLD
+% figure('name','Error function Er (Gre*r-Kd*r)');
+% plot(simulink_ery_time,simulink_ery_out)
+% %% Plot Error function Ea
+% figure('name','Error function Ea');
+% plot(simulink_eay_time,simulink_eay_out)
+% %% Plot Error function Ep
+% figure('name','Error function Ep');
+% plot(simulink_epy_time,simulink_epy_out)
+% %% Plot Error function Es
+% figure('name','Error function Es');
+% plot(simulink_esy_time,simulink_esy_out)
 
 %% End
 hold off;

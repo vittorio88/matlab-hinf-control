@@ -26,7 +26,7 @@ Gp.nOriginPoles=countpolesatorigin(Gp.nominal.tf);
 
 
 % plant static gain
-Kp=dcgain(Gp.nominal.tf);
+Kp=dcgain(Gp.nominal.tf*s^Gp.nOriginPoles);
 
 %% Calculate Feedforward gain
 Gf=Gr/(Kd*Gs);

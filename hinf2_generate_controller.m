@@ -17,13 +17,14 @@
 
 
 %% Create state space model from Simulink
-[Am,Bm,Cm,Dm]=linmod('generalized_plant_M'); %% Get stace-space model from plantM simulink
+[Am,Bm,Cm,Dm]=linmod2('generalized_plant_M'); %% Get stace-space model from plantM simulink
+
+% Interesting to view simulink output 
+% myss=ss(Am,Bm,Cm,Dm); 
+% bode(myss)
+
+
 M_simulink=ltisys(Am,Bm,Cm,Dm); %% convert state-space to SYS model M
-
-% Interesting to view simulink output
-myss=ss(Am,Bm,Cm,Dm); 
-bode(myss)
-
 
 %% add two unstable poles previously removed from Wt.
 % always need 2 pole removales because Wt has 2 poles
@@ -44,14 +45,15 @@ Gc.zpk.value=zpk(Gc.tf.value);
 %% Modify controller if necessary
 Gc.gainmod=1;
 
+% does have poles at origin
 % Change low frequency poles to s^mu
-Gc.mod.value=Gc.tf.value*Gc.gainmod*(s+0.01)^sys.mu/s^sys.mu; % does have poles at origin
+% Gc.mod.value=Gc.tf.value*Gc.gainmod*(s+0.01)^sys.mu/s^sys.mu; 
 % Gcmod = Gc_zpk*(s-Gc_zpk.p{1}(2))*(s-Gc_zpk.p{1}(3))/(s+abs(Gc_zpk.p{1}(2))) / (s+abs(Gc_zpk.p{1}(3)))
 % Gcmod=minreal(Gcmod,1e-4)
-
 % Gcmod=Gcmod*(s+9.859)^sys_mu/s^sys_mu % does have poles at origin
 
-% Gcmod=Gc*Gc_gainmod; % doesnt have poles at origin
+% doesnt have poles at origin
+Gc.mod.value=Gc.tf.value*Gc.gainmod; 
 Gc.mod.value=minreal(Gc.mod.value,1e-4);
 Gc.mod.zpk=zpk(Gc.mod.value);
 

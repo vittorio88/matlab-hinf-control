@@ -7,6 +7,9 @@
 %% Find steady state error due to polynomial reference input
 r.errors.nominal=dcgain(s*Kd*S.nominal.value*r.signal*r.values.tf);
 
+% CORRECTION, TEST ME
+%r.errors.nominal=dcgain(s*s^sys.h*Kd*S.nominal.value*r.signal*r.values.tf);
+
 
 %% Find steady state error due to disturbance da
 
