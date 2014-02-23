@@ -1,20 +1,6 @@
 % generate_hinf.m
 
 
-%% TODO ERROR NEEDS FIXING
-% 
-% Error using ltiss (line 28)
-% SYS is not a SYSTEM matrix
-% 
-% Error in hinf2_generate_controller (line
-% 20)
-% [Ac,Bc,Cc,Dc]=ltiss(Cmod);
-% 
-% Error in a0_executor (line 18)
-% hinf2_generate_controller % Generates
-% hinf controller
-
-
 
 %% Create state space model from Simulink
 [Am,Bm,Cm,Dm]=linmod2('generalized_plant_M'); %% Get stace-space model from plantM simulink
@@ -70,6 +56,6 @@ S.nominal.value=1-T.nominal.value;
 % Calculate controller DC gain
 Kc=dcgain((s^sys.mu)*Gc.mod.value);
 
-S.nominal.star=S.nominal.value/s^(sys.h); % Remove poles and zeros at s=0
+S.nominal.star=S.nominal.value/s^(sys.mu + sys.p); % Remove poles and zeros at s=0
 S.nominal.star=minreal(S.nominal.star);% Cancel poles and zeros at s=0
 

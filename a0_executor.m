@@ -4,7 +4,8 @@
 
 %% Get started
 a1_prepare % prepares workspace
-a2_data_input_examsim1 % input controller specification
+% a2_data_input_examsim1 % input controller specification
+a2_data_input_mdcs_h5_v1_stud_p4
 a3_process_input % Interpret some input to prepare for further analysis.
 
 %% Crunch numbers
