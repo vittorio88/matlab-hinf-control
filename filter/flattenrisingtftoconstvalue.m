@@ -14,13 +14,12 @@ tfMagnitudeVector = squeeze(bode(risingtf ,frequencyVector));
 % Chose butterworth pole position by finding intersection frequency
 for sfreq=1 : 1 : length(frequencyVector)
     % find frequency which is 3db away from intersection- 1.4125
-    if roundTo((tfMagnitudeVector(sfreq) ),1) > roundTo(steadyStateValue,1)
-        polepos=frequencyVector(sfreq)
+    if (roundTo((tfMagnitudeVector(sfreq) ),2) >= roundTo(steadyStateValue,2))
+        polepos=frequencyVector(sfreq);
         break;
     end
 end
 
-% steadyStateValueDb=20*log10(steadyStateValue);
 filter = risingtf/ (s^2/polepos^2 + sqrt(2)*s/polepos + 1);
 
 

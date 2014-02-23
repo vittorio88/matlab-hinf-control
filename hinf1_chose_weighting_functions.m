@@ -14,17 +14,15 @@ W1.tf.inv=W1.tf.value^-1;
 % For polynomial or null plant disturbance
 if (dp.values.type == 0 || dp.values.type == 1) && (da.values.type == 0 || da.values.type == 1)
     W1.mod.value=W1.tf.value * (s)^(sys.mu + sys.p)/(s+Wc.design.value*10^-6)^(sys.mu + sys.p); % Replace origin poles with poles close to origin for simulink
-    W1.mod.value=minreal(W1.mod.value);
 end
 
 % For sinusoidal plant disturbance
 if da.values.type == 2
-    W1.mod.value=W1.tf.value*s^(sys.mu + sys.p)/(s + da.values.frequency*10^-2)^(sys.mu + sys.p);
+    W1.mod.value=W1.tf.value*s^(sys.mu + sys.p)/(s + da.values.frequency*10^-5)^(sys.mu + sys.p);
 end
 
 if dp.values.type == 2
-    W1.mod.value=W1.tf.value*s^(sys.mu + sys.p)/(s + dp.values.frequency*10^-2)^(sys.mu + sys.p);
-%     W1.mod.value=W1.tf.value; % passthrough mode
+    W1.mod.value=W1.tf.value*s^(sys.mu + sys.p)/(s + dp.values.frequency*10^-5)^(sys.mu + sys.p);
 end
 
 % minreal
@@ -45,15 +43,15 @@ W1.mod.zpk=zpk(W1.mod.value);
 %% debug prints
 % figure
 % hold on
-% bode(tf(S.design.p.value),tf(Ms_lf.value),S.design.value,W1.tf.inv,W1.mod.inv,derp,logspace(-5,5))
-% legend ('Sp','Ms','S','W1inv','W1modinv','derp')
+% bode(tf(S.design.p.value),tf(Ms_lf.value),S.design.value,W1.tf.inv,W1.mod.inv,logspace(-5,5))
+% legend ('Sp','Ms','S','W1inv','W1modinv')
 % hold off
 
 
 %% GET W2 - AUTO (FAIL)
 
 % plot Wt, and plot Wu. Make higher curve equal to W2.
-% bode(Wt.tf.value,Wu.tf.value); % PICK HIGHER OF TWO CURVES
+% bode(Wt.tf.value,Wu.multiplicative.tf.value); % PICK HIGHER OF TWO CURVES
 
 % Automatic procedure (not useful because of unstable zeros)
 % % convenient when there is no clear winner between Wu and Wt
@@ -71,7 +69,6 @@ W2.mod.value=tf(1/T.design.p.value); % Same as Wt without zeros
 % % If you pick Wu
 % W2=Wu; % pick highest value of Wu
 % W2mod=tf(dcgain(Wu))
-
 
 
 

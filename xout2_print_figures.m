@@ -14,15 +14,15 @@ end
 %% Sensitivity function values and weights
 figure('name','Sensitivity function values and weights');
 hold on
-sstar_subplot1 = subplot(121);
-title(sstar_subplot1, 'S* range')
-bode(S.star.upperLimit*s,S.star.lowerLimit*s, S.star.value);
-legend('S* upper limit','S* lower limit','S* chosen')
+% sstar_subplot1 = subplot(121);
+% title(sstar_subplot1, 'S* range')
+% bode(S.star.upperLimit*s, S.star.value);
+% legend('S* upper limit','S* chosen')
 
-sstar_subplot2 = subplot(122);
-title(sstar_subplot2, 'nominal')
-bode(S.design.value,tf(S.design.p.value),Ws.tf.inv,S.star.lowerLimit*s)
-legend('S design','S design peak','Ws^-1','S.star.lowerLimit*s')
+% sstar_subplot2 = subplot(122);
+% title(sstar_subplot2, 'nominal')
+bode(S.design.value,tf(S.design.p.value),Ws.tf.inv,S.star.upperLimit*s,vector.log.value)
+legend('S design','S design peak','Ws^-1','S.star.upperLimit*s')
 
 hold off
 
@@ -63,22 +63,20 @@ hold off
 
 %% Check for NS, NP, RS, and RP
 
-
 figure('name','Check for NS, NP, RS, and RP');
-hold on
 check_subplot1 = subplot(121);
-title(check_subplot1, 'Nominal output with weighting functions should not pass 0db')
 bode(Ws.tf.value*S.nominal.value,Wt.tf.value*T.nominal.value) %should not pass 0db
+title(check_subplot1, 'Nominal output with weighting functions should not pass 0db')
+hold on
 legend('NP:Ws*Sn','NP:Wt*Tn')
 if isfield(Gp, 'coefficient')
     bode( Wu.multiplicative.tf.value*T.nominal.value) % should not pass 0db
-    legend('RS:Wu*Tn')
+    hold on
     bode(Ws.tf.value*S.nominal.value+ Wu.multiplicative.tf.value*T.nominal.value) % should not pass 0db
-    legend('NP & RS: Ws*Sn + Wu*Tn')
-    
+    legend('NP:Ws*Sn','NP:Wt*Tn','RS:Wu*Tn','NP & RS: Ws*Sn + Wu*Tn')
     check_subplot2 = subplot(122);
-    title(check_subplot2, 'Check RP, blue over red for lf, blue under green for hf')
     bode(Ws.tf.value/(1- Wu.multiplicative.tf.value),'r',L.design.value,'b',(1-Ws.tf.value)/ Wu.multiplicative.tf.value,'g')
+    title(check_subplot2, 'Check RP, blue over red for lf, blue under green for hf')
     legend('Ws/(1-Wu)','L','(1-Ws)/Wu')
 end
 

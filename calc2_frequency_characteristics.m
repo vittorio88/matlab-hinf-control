@@ -75,7 +75,7 @@ S.design.value=1-T.design.value; % Sensitivity Function
 % Increase Wn until S.design clears low frequency disturbance attenuation
 % value
 if da.values.type == 2
-    while(abs(evalfr(S.design.value,1i* da.values.frequency)) > Ms_lf.value)
+    while(abs(evalfr(S.design.value,1i* da.values.frequency)) >= Ms_lf.value)
         Wn.design.value = Wn.design.value + 1;
         T.design.value=1/(1+2*dampingCoefficient*s/Wn.design.value+(s^2)/(Wn.design.value^2)); % Complimentary sensitivity function
         S.design.value=1-T.design.value; % Sensitivity Function
@@ -85,7 +85,7 @@ if da.values.type == 2
 end
 
 if dp.values.type == 2
-    while(abs(evalfr(S.design.value,1i* dp.values.frequency)) > Ms_lf.value)
+    while(abs(evalfr(S.design.value,1i* dp.values.frequency)) >= Ms_lf.value)
         Wn.design.value = Wn.design.value + 1;
         T.design.value=1/(1+2*dampingCoefficient*s/Wn.design.value+(s^2)/(Wn.design.value^2)); % Complimentary sensitivity function
         S.design.value=1-T.design.value; % Sensitivity Function
@@ -101,7 +101,7 @@ L.design.value=T.design.value/(1-T.design.value); % Loop function
 %% Calculate bandwidth of sensitivity function and S*
 S.design.bandwidth=Wn.design.value*sqrt(1-2*dampingCoefficient^2+sqrt(2-4*dampingCoefficient^2+4*dampingCoefficient^4));
 S.design.dcgain = dcgain(S.design.value/s);
-S.star.upperLimit = S.design.dcgain;
+
 
 %% Calculates sensitivity and complementary sensitivity function peaks
 T.design.p.value=1/(2*dampingCoefficient*sqrt(1-dampingCoefficient^2));
@@ -118,20 +118,19 @@ S.design.p.db=20*log10(S.design.p.value);
 % inputs
 if r.values.type == 1
     r.constraints.Sstar = r.errors.max / ( Kd * r.values.coefficient);
-    S.star.lowerLimit = r.constraints.Sstar;
+    S.star.upperLimit = r.constraints.Sstar;
 end
 if da.values.type == 1
     da.constraints.Sstar = da.errors.max / (da.values.coefficient * abs(Kp) ) ;
-    S.star.lowerLimit=max(S.star.lowerLimit, da.constraints.Sstar );
+    S.star.upperLimit=min(S.star.upperLimit, da.constraints.Sstar );
 end
 if dp.values.type == 1
     dp.constraints.Sstar = dp.errors.max / dp.values.coefficient ;
-    S.star.lowerLimit=max(S.star.lowerLimit, dp.constraints.Sstar );
+    S.star.upperLimit=min(S.star.upperLimit, dp.constraints.Sstar );
 end
 
 % chose effective dcgain of S
-% S.star.dcgain = (S.star.upperLimit + S.star.lowerLimit) / 2;
-S.star.dcgain =S.star.lowerLimit;
+S.star.dcgain =S.star.upperLimit;
 S.star.value = S.star.dcgain * s^(sys.mu + sys.p);
 
 

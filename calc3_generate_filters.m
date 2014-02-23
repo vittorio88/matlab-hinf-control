@@ -1,69 +1,39 @@
 % calculate_filter.m
 % Filter mask generation for sinusoidal disturbances
 
-
-%% Chose to design Ws to filter da or dp!!!!
-
-
 %% Create weighting function Ws to represent high pass filter
 % Ws.tf.inv is a curve that must be below Ms_lf up until plant sinusoidal input
 % frequency, and under Sp at all times.
 
-
 % create generic Ws if there is no low frequency sinusoidal disturbance
 if (dp.values.type == 0 || dp.values.type == 1) && (da.values.type == 0 || da.values.type == 1)
-    
     Ws.tf.polepos=Wc.design.value*10^(-1); % Manually move as close to Wc as possible without cutting resonant peak of S
     Ws.tf.inv = S.star.value*(s+Ws.tf.polepos)^(sys.mu + sys.p)/ Ws.tf.polepos;
     Ws.tf.inv = flattenrisingtftoconstvalue(Ws.tf.inv,S.design.p.value,vector.log.value);
-
-    %      Verify Ws_polepos with following command
-         bode(tf(S.design.p.value), S.star.value,Ws.tf.inv,S.design.value,S.star.lowerLimit*s)
-    
 end
-
-
-
 
 % Build Ws manually butterworth 2nd order
 if da.values.type == 2
-    
-    if (sys.mu + sys.p) == 0
-        Ws.tf.inv=buildhighpassbwfilterfrommask_stabilized(Ms_lf.db, da.values.frequency, S.design.p.value, vector.log.value);
-    end
-    
-    if (sys.mu + sys.p) > 0
-        Ws.tf.inv=buildhighpassbwfilterfrommask(Ms_lf.value, da.values.frequency, S.design.p.value , (sys.mu + sys.p), 0);
-    end
-    
+    Ws.tf.polepos=da.values.frequency*10^1; % Manually move as close to Wc as possible without cutting resonant peak of S
+    Ws.tf.inv = S.star.value*(s+Ws.tf.polepos)^(sys.mu + sys.p)/ Ws.tf.polepos;
+    Ws.tf.inv = flattenrisingtftoconstvalue(Ws.tf.inv,S.design.p.value,vector.log.value);
 end
-
 
 % Build Ws from dp sinusoidal disturbance
 if dp.values.type == 2
-
-    if (sys.mu + sys.p) == 0
-        Ws.tf.inv=buildhighpassbwfilterfrommask_stabilized(Ms_lf.db, dp.values.frequency, S.design.p.value, vector.log.value);
-    end
-    
-    if (sys.mu + sys.p) > 0
-        Ws.tf.inv=buildhighpassbwfilterfrommask(Ms_lf.value, dp.values.frequency, S.design.p.value , (sys.mu + sys.p), 1);
-    end
-    
-    
+    Ws.tf.polepos=dp.values.frequency; % Manually move as close to Wc as possible without cutting resonant peak of S
+    Ws.tf.inv = S.star.value*(s+Ws.tf.polepos)^(sys.mu + sys.p)/ Ws.tf.polepos;
+    Ws.tf.inv = flattenrisingtftoconstvalue(Ws.tf.inv,S.design.p.value,vector.log.value);
 end
-
-% derp=buildhighpassbwfilterfrommask_stabilized(Ms_lf.db, dp.values.frequency, S.design.p.value, vector.log.value);
 
 Ws.tf.value=Ws.tf.inv^-1;
 
-
 %% Verify Ws
+bode(tf(S.design.p.value), S.star.value,Ws.tf.inv,S.design.value)
 
+% check Ms
 % bode(tf(S.design.p.value),tf(Ms_lf.value),Ws.tf.inv)
 % check_ws=abs(evalfr(Ws_inv,1i*dp_freq)) % Should return Ms
-% bode(Ws_inv)
-
 
 %% Create weighting function Wt to represent low pass filter
 % Wt_inv is a curve that must be below Mt_HF after sinusoidal input
@@ -73,7 +43,7 @@ if ds.values.type == 0 || ds.values.type == 1
 end
 
 if ds.values.type==2
-
+    
     % For butterworth
     Mt_hf.polepos=(ds.values.frequency^4/(10^((-Mt_hf.db+T.design.p.value)/10)-1) )^(1/4) ;% Valid only for second order lowpass butterworth
     Wt.tf.inv = T.design.p.value/(1 + s*sqrt(2)/( Mt_hf.polepos ) + (s)^2/( Mt_hf.polepos )^2 );
@@ -90,12 +60,14 @@ Wt.poles=minreal(Wt.tf.value*T.design.p.value); % Pole position equal Wt with dc
 %% Veriy Wt
 
 % Check Wt_inv
-% broken%  check_mt=abs(1/(1 + 1i*dMt_hs.values.frequency*sqrt(2)/(Mt_hf.polepos) + (1i*ds_freq)^2/(Mt_hf.polepos)^2) )% should return Mt
-%     check_wt=abs(evalfr(Wt.tf.inv,1i*ds.values.frequency)) % Should return Mt
-%     check_wtdb=20*log10(abs(evalfr(Wt.tf.inv,1i*ds.values.frequency))) % should return Mt_db
-%     check_wtbutdb=20*log10(abs(evalfr(Wt.tf.inv,1i*Mt_hf.polepos))) %should be-3db
-%     bode(Wt.tf.inv,minreal(Wt.tf.inv))
-%  bode(Wt.tf.inv)
+% check_mt=abs(1/(1 + 1i*ds.values.frequency*sqrt(2)/(Mt_hf.polepos) + (1i*ds.values.frequency)^2/(Mt_hf.polepos)^2) )% should return Mt
+
+% Mt_hf.value
+% check_wt=abs(evalfr(Wt.tf.inv, 1i*ds.values.frequency)) % Should return Mt
+% Mt_hf.db
+% check_wtdb=20*log10(abs(evalfr(Wt.tf.inv, 1i*ds.values.frequency))) % should return Mt_db
+% check_wtbutdb=20*log10(abs(evalfr(Wt.tf.inv, 1i*Mt_hf.polepos))) %should be-3db
+% bode(Wt.tf.inv,tf(Mt_hf.value),tf(T.design.p.value))
 
 
 %% Create weighting function Wu to represent plant uncertainty

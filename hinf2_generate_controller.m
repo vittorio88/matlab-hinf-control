@@ -14,8 +14,8 @@ M_simulink=ltisys(Am,Bm,Cm,Dm); %% convert state-space to SYS model M
 
 %% add two unstable poles previously removed from Wt.
 % always need 2 pole removales because Wt has 2 poles
-M_filtered=sderiv(M_simulink,2,[1/abs(Wt.zpk.value.z{1}(1)) 1 ]);
-M_filtered=sderiv(M_filtered,2,[1/abs(Wt.zpk.value.z{1}(2)) 1 ]);
+M_filtered=sderiv(M_simulink,2,[1/abs(W2.tf.zpk.z{1}(1)) 1 ]);
+M_filtered=sderiv(M_filtered,2,[1/abs(W2.tf.zpk.z{1}(2)) 1 ]);
 
 % M_min = ss(M_filtered); % minreal of SYS model after adding poles
 
@@ -40,7 +40,7 @@ Gc.gainmod=1;
 
 % doesnt have poles at origin
 Gc.mod.value=Gc.tf.value*Gc.gainmod; 
-Gc.mod.value=minreal(Gc.mod.value,1e-4);
+% Gc.mod.value=minreal(Gc.mod.value,1e-4);
 Gc.mod.zpk=zpk(Gc.mod.value);
 
 % Gcmod=(0.4353*s^3 + 240.0*s^2 + 11222.0*s + 687.9)/(s^3 + 7218.0*s^2 + 141990.0*s + 698550.0)
